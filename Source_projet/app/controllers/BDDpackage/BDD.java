@@ -844,7 +844,7 @@ public class BDD {
      * @param   userID ID de l'utilisateur
      * @return  retourne un tableau 2 dimensions avec 2 arrayList, la 1ere avec la categorie, la 2eme avec le montant
      */
-    public int DixDerniersMouvements(int userID){
+    public ArrayList<Integer> DixDerniersMouvements(int userID){
         String SQL = "SELECT Transaction.valeur, Modele_transaction.type_transaction_id, Modele_transaction.sous_categorie_id, Transaction.date"
                         + " FROM Modele_transaction"
                         + " INNER JOIN Transaction ON Modele_transaction.modele_transaction_id = Transaction.modele_transaction_id"
