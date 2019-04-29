@@ -14,7 +14,6 @@ import java.awt.*;
  * @author spine
  */
 public class Categorie {
-
     public String nom;
     public int id;
     public Color couleur;
