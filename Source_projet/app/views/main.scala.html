@@ -12,7 +12,6 @@
     <head>
         <meta charset="utf-8">
 
-            <!-- C'est censé être utile pour le site sur téléphone -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         @* Here's where we render the page title `String`. *@
@@ -66,6 +65,55 @@
                 }
         </script>
 
+        <script type = "text/javascript">
+                function displaySousCatSel() {
+                    var e = document.getElementById("catSel");
+                    var f = e.options[e.selectedIndex].value;
+                    if(f == 9) {
+                        document.getElementById("subCat").style.display = "none";
+                    } else {
+                        document.getElementById("subCat").style.display = "inline";
+                    }
+                }
+        </script>
+
+        <script type = "text/javascript">
+                function displayRecurrence() {
+                    if (document.getElementById('chk1').checked)
+                    {
+                        document.getElementById("recurrence").style.display = "inline";
+                    } else
+                    {
+                        document.getElementById("recurrence").style.display = "none";
+                    }
+                }
+        </script>
+
+        <script type = "text/javascript">
+                function displaySousCatSelIncome() {
+                    var e = document.getElementById("catSel-income");
+                    var f = e.options[e.selectedIndex].value;
+                    if(f == 9) {
+                        document.getElementById("subCat-income").style.display = "none";
+                    } else {
+                        document.getElementById("subCat-income").style.display = "inline";
+                    }
+                }
+        </script>
+
+        <script type = "text/javascript">
+                function displayRecurrenceIncome() {
+                    if (document.getElementById('chk1-income').checked)
+                    {
+                        document.getElementById("recurrence-income").style.display = "inline";
+                    } else
+                    {
+                        document.getElementById("recurrence-income").style.display = "none";
+                    }
+                }
+        </script>
+
+
 
         <div class="position-fixed border" style="top:220px; right:5px; z-index:99999">
             <img src="http://www.rtm.fr/sites/all/libraries/ckfinder/userfiles/images/plus%20png(1).png" onclick="openNav()"
@@ -92,13 +140,37 @@
                                     </div> <!-- form-group end.// -->
                                     <div class="form-group">
                                         <label>Categorie</label>
-                                        <select  name="categorie" class="form-control">
-                                            <option value = "0" selected>uncategorized</option>
+                                        <select  id="catSel" name="categorie" class="form-control" onchange="displaySousCatSel();">
                                             @for(cat <- (HomeController.DB).getAllCategories()) {
-                                                <option value ="@cat.id">@cat.nom</option>
+                                                <option value="@cat.id">@cat.nom</option>
                                             }
-                                            </select>
+                                        </select>
                                     </div> <!-- form-group end.// -->
+
+                                    <div id="subCat" class="hidden-categorie">
+                                        <div class="form-group">
+                                            <label>Subcategorie</label>
+                                            <select name="sous-categorie" class="form-control">
+                                                @for(sousCat <- (HomeController.DB).get_Sous_categorie(1)) {
+                                                    <option value ="@sousCat.id">@sousCat.nom</option>
+                                                }
+                                            </select>
+                                        </div> <!-- form-group end.// -->
+                                    </div>
+
+                                    <input id="chk1" type="checkbox" data-toggle="toggle" onclick="displayRecurrence()">
+                                    <label for="check1">Recurrence</label>
+
+                                    <div id="recurrence" class="hidden-categorie">
+                                        <div class="form-group">
+                                            <select name="recurrence" class="form-control">
+                                                <option value ="">choose...</option>
+                                            </select>
+                                        </div> <!-- form-group end.// -->
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary btn-block"> Add </button>
+
                                 </form>
                             </div>
                         </div>
@@ -120,10 +192,37 @@
                                     </div> <!-- form-group end.// -->
                                     <div class="form-group">
                                         <label>Categorie</label>
-                                        <select  name="categorie" class="form-control">
-                                            <option value = "0" selected>uncategorized</option>
+                                        <select  id="catSel-income" name="categorie" class="form-control" onchange="displaySousCatSelIncome();">
+                                        @for(cat <- (HomeController.DB).getAllCategories()) {
+                                            <option value="@cat.id">@cat.nom</option>
+                                        }
                                         </select>
                                     </div> <!-- form-group end.// -->
+
+                                    <div id="subCat-income" class="hidden-categorie">
+                                        <div class="form-group">
+                                            <label>Subcategorie</label>
+                                            <select name="sous-categorie" class="form-control">
+                                            @for(sousCat <- (HomeController.DB).get_Sous_categorie(1)) {
+                                                <option value ="@sousCat.id">@sousCat.nom</option>
+                                            }
+                                            </select>
+                                        </div> <!-- form-group end.// -->
+                                    </div>
+
+                                    <input id="chk1-income" type="checkbox" data-toggle="toggle" onclick="displayRecurrenceIncome()">
+                                    <label for="check1">Recurrence</label>
+
+                                    <div id="recurrence-income" class="hidden-categorie">
+                                        <div class="form-group">
+                                            <select name="recurrence" class="form-control">
+                                                <option value ="">choose...</option>
+                                            </select>
+                                        </div> <!-- form-group end.// -->
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary btn-block"> Add </button>
+
                                 </form>
                             </div>
                         </div>
