@@ -488,24 +488,16 @@ public class BDD {
                     + " WHERE categorie_id = ?";
 
             PreparedStatement pstmt = conn.prepareStatement(SQL);
-
             pstmt.setInt(1, CategorieID);
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
-                // Gérer la couleur !!!!!!!
-                //Color color = Color.decode( rs.getString("couleur") );
-                //Color color2 = Color.getColor( rs.getString("couleur") );
-
-                categorie = new Categorie( rs.getInt(1),rs.getString("nom"));
-
+                categorie = new Categorie(rs.getInt(1),rs.getString("nom"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
         }
-
         return categorie;
-
     }
 
     /**
@@ -526,10 +518,6 @@ public class BDD {
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
-                // Gérer la couleur !!!!!!!
-                //Color color = Color.decode( rs.getString("couleur") );
-                //Color color2 = Color.getColor( rs.getString("couleur") );
-
                 categorie = new Categorie( rs.getInt(1),rs.getString("nom"));
 
             }
@@ -814,6 +802,28 @@ public class BDD {
         }
     }
 
+    public ArrayList<Categorie> getAllCategories() {
+        ArrayList<Categorie> categories = new ArrayList<Categorie>();
+        try {
+            String SQL = "SELECT categorie_id " + "FROM " + table("Categorie");
+
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(SQL);
+
+            while (rs.next()) {
+                categories.add(CategorieByID(rs.getInt(0)));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return categories;
+    }
+    /*public ArrayList<Integer> getTenLastSousCategorie(int userID, int sousCatID) {
+        String SQL = "SELECT SUM(Transaction.valeur) as Somme FROM " + table("Utilisateur") +
+                "INNER JOIN " + table("Modele_transaction") + "ON Modele_transaction.utilisateur_id = Utilisateur.id " +
+                "INNER JOIN " + table("Transaction") + "ON Modele_transaction.modele_transaction_id = Transaction.modele_transaction_id " +
+                "WHERE Utilisateur.id = ? AND Modele_transaction.sous_categorie_id = ? " + "GROUP BY MONTH(Transaction.date)";
+=======
     /**
      * Renvoie les 10 dernieres depenses toutes categories confondues
      *
