@@ -99,6 +99,13 @@
                                             }
                                             </select>
                                     </div> <!-- form-group end.// -->
+                                    <button type="submit" class="btn btn-primary btn-block"> Add </button>
+                                    <div class="checkbox checkbox-circle">
+                                        <input id="check7" class="styled" type="checkbox" checked>
+                                        <label for="check7">
+                                            Style 7 (Rounded)
+                                        </label>
+                                    </div>
                                 </form>
                             </div>
                         </div>
@@ -122,8 +129,12 @@
                                         <label>Categorie</label>
                                         <select  name="categorie" class="form-control">
                                             <option value = "0" selected>uncategorized</option>
+                                            @for(cat <- (HomeController.DB).getAllCategories()) {
+                                                <option value ="@cat.id">@cat.nom</option>
+                                            }
                                         </select>
                                     </div> <!-- form-group end.// -->
+                                    <button type="submit" class="btn btn-primary btn-block"> Add  </button>
                                 </form>
                             </div>
                         </div>
