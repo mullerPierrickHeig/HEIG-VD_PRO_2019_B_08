@@ -678,3 +678,7 @@ input:focus{
 .sidebar-menu-text {
   color : #bfbfbf;
 }
+
+.hidden-categorie {
+  display: none;
+}
