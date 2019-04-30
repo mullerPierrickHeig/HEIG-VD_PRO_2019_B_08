@@ -290,4 +290,43 @@ public class HomeController extends Controller {
             }
         }
     }
+
+    public Result ModifProfile()
+    {
+        DynamicForm form = formFactory.form().bindFromRequest();
+
+        //Gestion erreur
+        boolean error = false;
+        ArrayList<String> messageError = new ArrayList<String>();
+
+
+        if(form.get("surname").length() == 0)
+        {
+            messageError.add("Erreur, veuillez entrer un prénom\n");
+            error = true;
+        }
+        if(form.get("name").length() == 0)
+        {
+            messageError.add("Erreur, veuillez entrer un nom\n");
+            error = true;
+        }
+        if(form.get("username").length() == 0)
+        {
+            messageError.add("Erreur, veuillez entrer un username\n");
+            error = true;
+        }
+        if(form.get("email").length() == 0)
+        {
+            messageError.add("Erreur, veuillez entrer un e-mail\n");
+            error = true;
+        }
+        if(form.get("anniversaire").length() == 0)
+        {
+            messageError.add("Erreur, veuillez entrer une date de naissance\n");
+            error = true;
+        }
+
+
+        return ok (views.html.index.render("temp"));
+    }
 }

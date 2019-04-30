@@ -125,6 +125,15 @@ public class BDD {
         
     }
 
+
+    public boolean updateUser(int userId, String prenom,String nom,String email,String pseudo,String mdp,Boolean genre,
+                              String anniversaire,int statut_id, int pays_id){
+
+            String sql = "UPDATE " + table("Utilisateur") + " set options_id=? where utilisateur_id=? ; ";
+            return true;
+
+    }
+
     public boolean updateOptionUser(int userId, int OptionId)
     {
         try {
