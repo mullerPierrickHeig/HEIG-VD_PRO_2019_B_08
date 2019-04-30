@@ -4,6 +4,7 @@
 @(pays : List[Pays],
         statut : List[Statut],
         error : List[String])
+
 @main("Register") {
     @helper.form(action = helper.CSRF(routes.HomeController.RegisterSubmit())) {
         <div class="container">

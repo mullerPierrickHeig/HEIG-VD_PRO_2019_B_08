@@ -79,14 +79,28 @@
                         <div class="card-header" id="headingOne">
                             <h5 class="mb-0">
                                 <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                    Add income
+                                    Add expense
                                 </button>
                             </h5>
                         </div>
 
                         <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-                            <div class="card-body">
-                                euh lol ?
+                            <div class="card-body sidebar-menu-text">
+                                <form>
+                                    <div class="form-group">
+                                        <label>Amount</label>
+                                        <input type="text" name="amount" class="form-control" placeholder="">
+                                    </div> <!-- form-group end.// -->
+                                    <div class="form-group">
+                                        <label>Categorie</label>
+                                        <select  name="categorie" class="form-control">
+                                            <option value = "0" selected>uncategorized</option>
+                                            @for(cat <- (HomeController.DB).getAllCategories()) {
+                                                <option value ="@cat.id">@cat.nom</option>
+                                            }
+                                            </select>
+                                    </div> <!-- form-group end.// -->
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -94,13 +108,24 @@
                         <div class="card-header" id="headingTwo">
                             <h5 class="mb-0">
                                 <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                    Add expense
+                                    Add income
                                 </button>
                             </h5>
                         </div>
                         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
-                            <div class="card-body">
-                                bah lol 2 quoi
+                            <div class="card-body sidebar-menu-text">
+                                <form>
+                                    <div class="form-group">
+                                        <label>Amount</label>
+                                        <input type="text" name="amount" class="form-control" placeholder="">
+                                    </div> <!-- form-group end.// -->
+                                    <div class="form-group">
+                                        <label>Categorie</label>
+                                        <select  name="categorie" class="form-control">
+                                            <option value = "0" selected>uncategorized</option>
+                                        </select>
+                                    </div> <!-- form-group end.// -->
+                                </form>
                             </div>
                         </div>
                     </div>
