@@ -142,15 +142,6 @@ public class HomeController extends Controller {
              , Integer.parseInt(form.get("statut"))
              , Integer.parseInt(form.get("pays")), opt);
         }
-
-        if(idResult != 0) {
-            user = DB.UtilisateurByID(idResult);
-            return ok( views.html.utilisateur.render( user,0,"") );
-        }
-        else if(!error)
-        {
-            messageError.add("Erreur, veuillez choisir un autre username ou un autre email\n");
-        }
         //Recuperation pays pour affichage
         ArrayList<Pays> pays = new ArrayList<Pays>();
         pays = DB.get_Pays();
@@ -158,6 +149,15 @@ public class HomeController extends Controller {
         //Recuperation statut pour affichage
         ArrayList<Statut> statut = new ArrayList<Statut>();
         statut = DB.get_Statut();
+        if(idResult != 0) {
+            user = DB.UtilisateurByID(idResult);
+            return ok( views.html.utilisateur.render( user,0,"",pays,statut) );
+        }
+        else if(!error)
+        {
+            messageError.add("Erreur, veuillez choisir un autre username ou un autre email\n");
+        }
+
         return ok(views.html.register.render(pays,statut,messageError));
 
     }
@@ -179,6 +179,7 @@ public class HomeController extends Controller {
     // Exemple pour passer un paramètre de java -> HTML
     public Result Profil() {
 
+
         // Get user_id
         if(user.getId() == 0)
         {
@@ -186,7 +187,15 @@ public class HomeController extends Controller {
         }
         else
         {
-            return ok( views.html.utilisateur.render( user,0,"") );
+            //Recuperation pays pour affichage
+            ArrayList<Pays> pays = new ArrayList<Pays>();
+            pays = DB.get_Pays();
+
+            //Recuperation statut pour affichage
+            ArrayList<Statut> statut = new ArrayList<Statut>();
+            statut = DB.get_Statut();
+
+            return ok( views.html.utilisateur.render( user,0,"",pays,statut) );
         }
 
     }
@@ -235,8 +244,15 @@ public class HomeController extends Controller {
             message = "Error: insertion failed !";
         }
 
+        //Recuperation pays pour affichage
+        ArrayList<Pays> pays = new ArrayList<Pays>();
+        pays = DB.get_Pays();
+
+        //Recuperation statut pour affichage
+        ArrayList<Statut> statut = new ArrayList<Statut>();
+        statut = DB.get_Statut();
         // Retour a la page souhaitée (profil)
-        return ok( views.html.utilisateur.render( DB.UtilisateurByID( 1 ),alerte,message) );
+        return ok( views.html.utilisateur.render( DB.UtilisateurByID( 1 ),alerte,message,pays,statut) );
     }
 
     // Gestion des options
@@ -274,4 +290,52 @@ public class HomeController extends Controller {
             }
         }
     }
+
+    public Result ModifProfile() {
+        if (user.getId() == 0) {
+            return ok(views.html.index.render("Compact Budget"));
+        } else {
+            DynamicForm form = formFactory.form().bindFromRequest();
+
+            //Recuperation pays pour affichage
+            ArrayList<Pays> pays = new ArrayList<Pays>();
+            pays = DB.get_Pays();
+
+            //Recuperation statut pour affichage
+            ArrayList<Statut> statut = new ArrayList<Statut>();
+            statut = DB.get_Statut();
+
+            //Gestion erreur
+            boolean error = false;
+            String erreurMes = "Erreur lors de la modification du profil, veuillez réessayer.";
+
+            if (form.get("surname").length() == 0 || form.get("name").length() == 0 || form.get("username").length() == 0 ||
+                    form.get("email").length() == 0 || form.get("anniversaire").length() == 0) {
+                error = true;
+            }
+
+            if(!error)
+            {
+                Boolean genreVal = Integer.parseInt(form.get("genre")) == 1 ? true : false;
+                boolean ret = DB.updateUser(user.getId(),form.get("surname"),form.get("name"),form.get("email"),form.get("username")
+                        , genreVal,form.get("anniversaire")
+                        , Integer.parseInt(form.get("statut"))
+                        , Integer.parseInt(form.get("pays")));
+                if(ret)
+                {
+                    user = DB.UtilisateurByID(user.getId());
+                    return redirect("/profil");
+                }
+                else
+                {
+
+                    return ok( views.html.utilisateur.render( user,1,erreurMes,pays,statut));
+                }
+            }
+
+            return ok( views.html.utilisateur.render( user,1,erreurMes,pays,statut));
+        }
+    }
+
+
 }
