@@ -291,42 +291,51 @@ public class HomeController extends Controller {
         }
     }
 
-    public Result ModifProfile()
-    {
-        DynamicForm form = formFactory.form().bindFromRequest();
+    public Result ModifProfile() {
+        if (user.getId() == 0) {
+            return ok(views.html.index.render("Compact Budget"));
+        } else {
+            DynamicForm form = formFactory.form().bindFromRequest();
 
-        //Gestion erreur
-        boolean error = false;
-        ArrayList<String> messageError = new ArrayList<String>();
+            //Recuperation pays pour affichage
+            ArrayList<Pays> pays = new ArrayList<Pays>();
+            pays = DB.get_Pays();
 
+            //Recuperation statut pour affichage
+            ArrayList<Statut> statut = new ArrayList<Statut>();
+            statut = DB.get_Statut();
 
-        if(form.get("surname").length() == 0)
-        {
-            messageError.add("Erreur, veuillez entrer un prénom\n");
-            error = true;
-        }
-        if(form.get("name").length() == 0)
-        {
-            messageError.add("Erreur, veuillez entrer un nom\n");
-            error = true;
-        }
-        if(form.get("username").length() == 0)
-        {
-            messageError.add("Erreur, veuillez entrer un username\n");
-            error = true;
-        }
-        if(form.get("email").length() == 0)
-        {
-            messageError.add("Erreur, veuillez entrer un e-mail\n");
-            error = true;
-        }
-        if(form.get("anniversaire").length() == 0)
-        {
-            messageError.add("Erreur, veuillez entrer une date de naissance\n");
-            error = true;
-        }
+            //Gestion erreur
+            boolean error = false;
+            String erreurMes = "Erreur lors de la modification du profil, veuillez réessayer.";
 
+            if (form.get("surname").length() == 0 || form.get("name").length() == 0 || form.get("username").length() == 0 ||
+                    form.get("email").length() == 0 || form.get("anniversaire").length() == 0) {
+                error = true;
+            }
 
-        return ok (views.html.index.render("temp"));
+            if(!error)
+            {
+                Boolean genreVal = Integer.parseInt(form.get("genre")) == 1 ? true : false;
+                boolean ret = DB.updateUser(user.getId(),form.get("surname"),form.get("name"),form.get("email"),form.get("username")
+                        , genreVal,form.get("anniversaire")
+                        , Integer.parseInt(form.get("statut"))
+                        , Integer.parseInt(form.get("pays")));
+                if(ret)
+                {
+                    user = DB.UtilisateurByID(user.getId());
+                    return redirect("/profil");
+                }
+                else
+                {
+
+                    return ok( views.html.utilisateur.render( user,1,erreurMes,pays,statut));
+                }
+            }
+
+            return ok( views.html.utilisateur.render( user,1,erreurMes,pays,statut));
+        }
     }
+
+
 }

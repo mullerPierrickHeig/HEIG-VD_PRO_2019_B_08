@@ -19,6 +19,9 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.mindrot.jbcrypt.BCrypt;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.text.DateFormat;
 
 
 
@@ -126,16 +129,51 @@ public class BDD {
     }
 
 
-    public boolean updateUser(int userId, String prenom,String nom,String email,String pseudo,String mdp,Boolean genre,
+    public boolean updateUser(int userId, String prenom,String nom,String email,String pseudo,Boolean genre,
                               String anniversaire,int statut_id, int pays_id){
+            if(!checkUniqueUserWithId(email,pseudo,userId))
+            {
+                return false;
+            }
+            try {
+                String sql = "UPDATE " + table("Utilisateur") + " set prenom=?, nom=?,email=?," +
+                        "pseudo=?,genre=?,anniversaire=?,statut_id=?,pays_id=? where utilisateur_id=? ; ";
 
-            String sql = "UPDATE " + table("Utilisateur") + " set options_id=? where utilisateur_id=? ; ";
-            return true;
+                Date dateAnniversaire = null;
+                java.sql.Date sDate = null;
+                try {
+                    dateAnniversaire = new SimpleDateFormat("yyyy-MM-dd").parse(anniversaire);
+                    sDate = new java.sql.Date(dateAnniversaire.getTime());
+                }
+                catch (Exception e)
+                {
+                    Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, e);
+                    return false;
+                }
+                PreparedStatement pstmt = conn.prepareStatement(sql);
+                pstmt.setString(1, prenom);
+                pstmt.setString(2, nom);
+                pstmt.setString(3, email);
+                pstmt.setString(4, pseudo);
+                pstmt.setBoolean(5, genre);
+                pstmt.setDate(6, sDate);
+                pstmt.setInt(7, statut_id);
+                pstmt.setInt(8, pays_id);
+                pstmt.setInt(9, userId);
+
+                int count = pstmt.executeUpdate();
+                return (count > 0);
+            }
+            catch (SQLException ex) {
+                Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        return false;
 
     }
 
     public boolean updateOptionUser(int userId, int OptionId)
     {
+
         try {
             String sql = "UPDATE " + table("Utilisateur") + " set options_id=? where utilisateur_id=? ; ";
 
@@ -276,12 +314,8 @@ public class BDD {
      */
     public int addUser(String prenom, String nom, String email, String pseudo, String mdp,
                        String genre, String anniversaire,int statut,int Pays,int Option){
-        Boolean genreVal = Integer.parseInt(genre) == 1 ? true : false;
-        if(checkUniqueUser(email,pseudo))
-        {
-           return insert_Utilisateurs(prenom,nom,email,pseudo,mdp,genreVal,anniversaire,statut,Pays,Option);
-        }
-        return 0;
+        boolean genreVal = Integer.parseInt(genre) == 1 ? true : false;
+        return insert_Utilisateurs(prenom,nom,email,pseudo,mdp,genreVal,anniversaire,statut,Pays,Option);
     }
 
 
@@ -299,6 +333,30 @@ public class BDD {
             return false;
         
         return true;
+    }
+
+
+    /**
+     * Permet de verifier la validité d'une modification de profil (Nom et email)
+     *
+     * @params email,pseudo,userId
+     * @throws
+     */
+    private boolean checkUniqueUserWithId(String email, String pseudo, int userId) {
+        String sql = "Select * FROM " + table("Utilisateur") + " WHERE (email=? OR pseudo=?) AND utilisateur_id!=?;";
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, email);
+            pstmt.setString(2, pseudo);
+            pstmt.setInt(3, userId);
+            ResultSet rs = pstmt.executeQuery();
+            return !rs.next();
+        } catch (SQLException ex) {
+            Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+
+
     }
 
     /**
@@ -811,7 +869,7 @@ public class BDD {
             ResultSet rs = st.executeQuery(SQL);
 
             while (rs.next()) {
-                categories.add(CategorieByID(rs.getInt(0)));
+                categories.add(CategorieByID(rs.getInt(1)));
             }
         } catch (SQLException ex) {
             Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
