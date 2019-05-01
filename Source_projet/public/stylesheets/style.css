@@ -502,15 +502,12 @@ Extra (xl) large devices (large desktops, 1200px and up)
 
 @import url('https://fonts.googleapis.com/css?family=Numans');
 
-<<<<<<< HEAD
-=======
 html,body{
   background-size: cover;
   background-repeat: no-repeat;
   height: 100%;
   font-family: 'Numans', sans-serif;
 }
->>>>>>> fb_modifyProfil
 
 .container{
   height: 100%;
@@ -599,10 +596,6 @@ input:focus{
   padding-top: 115px;
   padding-bottom: 80px;
 }
-<<<<<<< HEAD
-
-
-
 
 /* Hiding the checkbox, but allowing it to be focused */
 .badgebox
@@ -678,8 +671,6 @@ input:focus{
 /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
 #main {
 }
-=======
->>>>>>> fb_modifyProfil
 
 /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
 @media screen and (max-height: 450px) {
