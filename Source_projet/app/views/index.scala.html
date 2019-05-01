@@ -1,27 +1,29 @@
 @(titre: String)
 
 @main(titre: String) {
-  <h1>Welcome to @titre</h1>
-    <p> bonjour les amis , </p>
-
-  <a href="http://localhost:9000/test" class="button">Go to test</a>
-  <br>
-  <a href="http://localhost:9000/profil" class="button">Go to Profil</a>
-  <br>
-  <a href="http://localhost:9000/categorie" class="button">Go to Categorie</a>
-  <br>
-  <a href="http://localhost:9000/sousCategorie" class="button">Add sous categorie</a>
-  <br>
-  <br>
-
-  <!-- Envoie le paramètre name a la page testParam -->
-  <form action="/testParam">
-    Entrez un mot :
-    <input type="text" name="name">
-
-    <input type="submit" value="Submit">
-  </form>
-
-  <br>
-
+  <div class="container">
+    <div class="row">
+      <div class="col-md border shadow-lg p-4 mb-4 home-row" >
+        <div class="div-centered-panel">
+          <div>
+            <H4>
+              Some informations
+            </H4>          </div>
+          <br>
+          <div>
+              Actual balance :
+          </div>
+        </div>
+      </div>
+      <div class="col-md border shadow-lg p-4 mb-4 home-row">
+        <div class="div-centered-panel">
+          Some statistics
+        </div>      </div>
+      <div class="col-md border shadow-lg p-4 mb-4 home-row">
+        <div class="div-centered-panel">
+          News
+        </div>
+      </div>
+    </div>
+  </div>
 }

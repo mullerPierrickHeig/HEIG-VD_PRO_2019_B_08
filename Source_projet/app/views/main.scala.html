@@ -99,6 +99,7 @@
                     } else {
                         document.getElementById("subCat-income").style.display = "inline";
                     }
+
                 }
         </script>
 
@@ -113,6 +114,12 @@
                     }
                 }
         </script>
+
+        <script type = "text/javascript">
+                function getCatId() {
+                }
+        </script>
+
 
 
 
@@ -142,9 +149,10 @@
                                     <div class="form-group">
                                         <label>Categorie</label>
                                         <select  id="catSel" name="categorie" class="form-control" onchange="displaySousCatSel();">
-                                            @for(cat <- (HomeController.DB).getAllCategories()) {
-                                                <option value="@cat.id">@cat.nom</option>
-                                            }
+
+                                        @for(cat <- (HomeController.DB).getAllCategories()) {
+                                            <option value="@cat.id">@cat.nom</option>
+                                        }
                                         </select>
                                     </div> <!-- form-group end.// -->
 
@@ -152,16 +160,14 @@
                                         <div class="form-group">
                                             <label>Subcategorie</label>
                                             <select name="sous-categorie" class="form-control">
-                                                @for(sousCat <- (HomeController.DB).get_Sous_categorie(1)) {
-                                                    <option value ="@sousCat.id">@sousCat.nom</option>
-                                                }
+                                            @for(sousCat <- (HomeController.DB).get_Sous_categorie(1)){
+                                                <option value ="@sousCat.id">@sousCat.nom</option>
+                                            }
                                             </select>
                                         </div> <!-- form-group end.// -->
                                     </div>
-
                                     <input id="chk1" type="checkbox" data-toggle="toggle" onclick="displayRecurrence()">
                                     <label for="check1">Recurrence</label>
-
                                     <div id="recurrence" class="hidden-categorie">
                                         <div class="form-group">
                                             <select name="recurrence" class="form-control">
@@ -169,13 +175,13 @@
                                             </select>
                                         </div> <!-- form-group end.// -->
                                     </div>
-
                                     <button type="submit" class="btn btn-primary btn-block"> Add </button>
-
                                 </form>
                             </div>
                         </div>
                     </div>
+
+
                     <div class="card-main">
                         <div class="card-header" id="headingTwo">
                             <h5 class="mb-0">
@@ -194,6 +200,7 @@
                                     <div class="form-group">
                                         <label>Categorie</label>
                                         <select  id="catSel-income" name="categorie" class="form-control" onchange="displaySousCatSelIncome();">
+
                                         @for(cat <- (HomeController.DB).getAllCategories()) {
                                             <option value="@cat.id">@cat.nom</option>
                                         }
@@ -204,16 +211,14 @@
                                         <div class="form-group">
                                             <label>Subcategorie</label>
                                             <select name="sous-categorie" class="form-control">
-                                            @for(sousCat <- (HomeController.DB).get_Sous_categorie(1)) {
-                                                <option value ="@sousCat.id">@sousCat.nom</option>
-                                            }
+                                                @for(sousCat <- (HomeController.DB).get_Sous_categorie(1)){
+                                                    <option value ="@sousCat.id">@sousCat.nom</option>
+                                                }
                                             </select>
                                         </div> <!-- form-group end.// -->
                                     </div>
-
                                     <input id="chk1-income" type="checkbox" data-toggle="toggle" onclick="displayRecurrenceIncome()">
                                     <label for="check1">Recurrence</label>
-
                                     <div id="recurrence-income" class="hidden-categorie">
                                         <div class="form-group">
                                             <select name="recurrence" class="form-control">
@@ -221,14 +226,11 @@
                                             </select>
                                         </div> <!-- form-group end.// -->
                                     </div>
-
                                     <button type="submit" class="btn btn-primary btn-block"> Add </button>
-
                                 </form>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
