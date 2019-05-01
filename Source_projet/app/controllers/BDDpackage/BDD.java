@@ -869,13 +869,16 @@ public class BDD {
             ResultSet rs = st.executeQuery(SQL);
 
             while (rs.next()) {
-                categories.add(CategorieByID(rs.getInt(1)));
+
+                categories.add(CategorieByID(rs.getInt("categorie_id")));
+
             }
         } catch (SQLException ex) {
             Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
         }
         return categories;
     }
+
     /*public ArrayList<Integer> getTenLastSousCategorie(int userID, int sousCatID) {
         String SQL = "SELECT SUM(Transaction.valeur) as Somme FROM " + table("Utilisateur") +
                 "INNER JOIN " + table("Modele_transaction") + "ON Modele_transaction.utilisateur_id = Utilisateur.id " +
@@ -979,9 +982,5 @@ public class BDD {
 
         System.out.println("------------------Get Type_transaction------------------------------------------------");
         System.out.println(app.get_Type_transaction());
-        
-
-
     }
-    
 }
