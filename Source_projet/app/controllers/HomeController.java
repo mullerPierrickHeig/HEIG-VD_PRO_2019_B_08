@@ -133,6 +133,16 @@ public class HomeController extends Controller {
             error = true;
         }
 
+        double solde;
+        if(form.get("solde").length() == 0)
+        {
+            solde = 0;
+        }
+        else
+        {
+            solde = Double.parseDouble(form.get("solde"));
+        }
+
 
         int idResult = 0;
         if(!error)
@@ -140,7 +150,7 @@ public class HomeController extends Controller {
             idResult = DB.addUser(form.get("surname"),form.get("name"),form.get("email"),form.get("username")
              , BCrypt.hashpw(form.get("password"), BCrypt.gensalt()), form.get("genre"),form.get("anniversaire")
              , Integer.parseInt(form.get("statut"))
-             , Integer.parseInt(form.get("pays")), opt);
+             , Integer.parseInt(form.get("pays")), opt,solde);
         }
         //Recuperation pays pour affichage
         ArrayList<Pays> pays = new ArrayList<Pays>();
