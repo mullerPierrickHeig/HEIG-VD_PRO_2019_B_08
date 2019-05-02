@@ -26,9 +26,10 @@ import java.text.DateFormat;
 
 
 
-/*
- *
- * @author spine
+/** Base de donnée.
+ * @author Compact budget
+ * @version 1.0
+ * @since 1.0
  */
 public class BDD {
     // Pour te connecter utilise un Login/Group roles admin (par default : postgres et ton mot de passe)
@@ -37,6 +38,7 @@ public class BDD {
     private String user = "postgres";       // postgres   user_files (droit uniquement de selection)
     private String password = "123456789";          // 123456789     123
     private Connection conn = null;
+
 
     public String getUser(){
         return this.user;
@@ -61,7 +63,9 @@ public class BDD {
     /**
      * Permet de convertir le nom d'une table simple avec le nom exacte
      *
-     * @param TableName
+     * @param TableName Nom de la table
+     *
+     * @return Nom de la table au bon format
      */
     private String table(String TableName) {
         return "Public.\"" + TableName + "\" ";   
@@ -69,7 +73,8 @@ public class BDD {
     /**
      * Permet de convertir l'id d'un pays en string
      *
-     * @param PaysID
+     * @param PaysID Id du pays
+     * @return Nom du pays
      */
     private String paysString(int PaysID) {
         String pays = "";
@@ -98,7 +103,8 @@ public class BDD {
     /**
      * Permet de convertir l'id des options en string
      *
-     * @param OptionsID
+     * @param OptionsID Id de l'option
+     * @return Tableau des options
      */
     private ArrayList<Boolean> optionsString(int OptionsID) {
         ArrayList<Boolean> options = new ArrayList<Boolean>();
@@ -128,7 +134,19 @@ public class BDD {
         
     }
 
-
+    /**
+     * Permet de mettre à jour le profil d'un utilisateur, sans le mot de passe ou les options
+     * @param userId ID de l'utilisateur à modifier
+     * @param prenom prénom de l'utilisateur
+     * @param nom nom de l'utilisateur
+     * @param email email de l'utilisateur
+     * @param pseudo pseudo de l'utilisateur
+     * @param genre genre de l'utilisateur, true pour homme, false pour femme
+     * @param anniversaire date de naissance de l'utilisateur
+     * @param statut_id id du statut de l'utilisateur
+     * @param pays_id id du pays de l'utilisateur
+     * @return boolean true si update à marcher, false sinon
+     */
     public boolean updateUser(int userId, String prenom,String nom,String email,String pseudo,Boolean genre,
                               String anniversaire,int statut_id, int pays_id){
             if(!checkUniqueUserWithId(email,pseudo,userId))
@@ -171,6 +189,12 @@ public class BDD {
 
     }
 
+    /**
+     * Met à jour les options de l'utilisateur
+     * @param userId ID de l'utilisateur à modifier
+     * @param OptionId Id de l'option à modifier
+     * @return true si l'option à été modifié dans l'utilisateur, false sinon
+     */
     public boolean updateOptionUser(int userId, int OptionId)
     {
 
@@ -193,9 +217,10 @@ public class BDD {
     }
 
     /**
-     * Permet de convertir le boolean du genre en String
+     * Permet de convertir l'acronyme du genre en String
      *
-     * @param genre
+     * @param genre acronyme du genre
+     * @return String du genre
      */
     private String genreString(String genre) {
          if (genre == null)
@@ -210,7 +235,8 @@ public class BDD {
     /**
      * Permet de convertir l'id du statut en string
      *
-     * @param statutID
+     * @param statutID l'ID du statut
+     * @return Nom du statut
      */
     private String statutString(int statutID) {
          String Statut = "";
@@ -238,7 +264,8 @@ public class BDD {
      /**
      * Find users by his/her ID
      *
-     * @param UtilisateurID
+     * @param UtilisateurID l'id de l'utilisateur
+      * @return l'Utilisateur trouvé, ou null si pas trouvé
      */
     public Utilisateur UtilisateurByID(int UtilisateurID) {
 
@@ -275,6 +302,7 @@ public class BDD {
         return user;
         
     }
+
     /**
      * Display users
      *
@@ -313,9 +341,9 @@ public class BDD {
      * @throws
      */
     public int addUser(String prenom, String nom, String email, String pseudo, String mdp,
-                       String genre, String anniversaire,int statut,int Pays,int Option){
+                       String genre, String anniversaire,int statut,int Pays,int Option,double solde){
         boolean genreVal = Integer.parseInt(genre) == 1 ? true : false;
-        return insert_Utilisateurs(prenom,nom,email,pseudo,mdp,genreVal,anniversaire,statut,Pays,Option);
+        return insert_Utilisateurs(prenom,nom,email,pseudo,mdp,genreVal,anniversaire,statut,Pays,Option,solde);
     }
 
 
@@ -365,7 +393,7 @@ public class BDD {
      * @params ...
      * @throws 
      */
-    private int insert_Utilisateurs(String prenom, String nom,String email,String pseudo,String mdp,Boolean genre,String anniversaire,int statut_id, int pays_id, int options_id){
+    private int insert_Utilisateurs(String prenom, String nom,String email,String pseudo,String mdp,Boolean genre,String anniversaire,int statut_id, int pays_id, int options_id, double solde){
         int droit_id = 2;
         int ok = 0;
         
@@ -377,10 +405,10 @@ public class BDD {
             
             String SQL = "INSERT INTO "
                     + table("Utilisateur")
-                    + "(prenom, nom, email, pseudo, mdp, genre, anniversaire, droit_id, statut_id, pays_id, options_id) "
+                    + "(prenom, nom, email, pseudo, mdp, genre, anniversaire, droit_id, statut_id, pays_id, options_id, solde   ) "
                     + "VALUES "
                     + "('" + prenom +"','"+ nom +"','"+ email +"','"+ pseudo +"','"+ mdp +"',"
-                    + genre.toString() +",'"+ anniversaire +"',"+ droit_id +","+ statut_id +","+ pays_id +","+ options_id + ")" +
+                    + genre.toString() +",'"+ anniversaire +"',"+ droit_id +","+ statut_id +","+ pays_id +","+ options_id + ", " +solde +" )" +
                     " RETURNING utilisateur_id;";
             
             Statement st = conn.createStatement();
@@ -970,7 +998,7 @@ public class BDD {
         app.UtilisateurByID(3);
         
         System.out.println("------------------Insert Utilisateurs ------------------------------------------------");
-        if (app.insert_Utilisateurs( "prenom1",  "nom2", "email2", "pseudo1", "mdp_evadvservsrevervrev_vdfvdfvdF_vfdvdf_lol", true, "1950-03-11", 2,  23,  1) == 0)
+        if (app.insert_Utilisateurs( "prenom1",  "nom2", "email2", "pseudo1", "mdp_evadvservsrevervrev_vdfvdfvdF_vfdvdf_lol", true, "1950-03-11", 2,  23,  1,0) == 0)
             System.out.println("erreur !");
         
         System.out.println("------------------Insert Sous_categorie------------------------------------------------");
