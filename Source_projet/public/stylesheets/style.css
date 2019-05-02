@@ -728,5 +728,10 @@ input:focus{
     -ms-transform: scale(1.3);
     -o-transform: scale(1.3);
     transform: scale(1.3);
-
 }
+
+.out-side-nav {
+    opacity: 0%;
+    color: #3B5998;
+}
+
