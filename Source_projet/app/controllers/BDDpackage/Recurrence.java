@@ -27,6 +27,4 @@ public enum Recurrence {
         }
         return -1;
     }
-
-    
 }
