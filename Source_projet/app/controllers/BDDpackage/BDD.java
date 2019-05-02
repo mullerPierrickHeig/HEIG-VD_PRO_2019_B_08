@@ -838,7 +838,7 @@ public class BDD {
             if(recurrence == null){
                 pstmt.setNull(6, Types.INTEGER);
             }else{
-                pstmt.setInt(6, Recurrence.getIdByName(recurrence));
+                pstmt.setInt(6, getRecIdByName(recurrence));
             }
 
             //ResultSet rs = pstmt.executeQuery();
@@ -876,7 +876,7 @@ public class BDD {
             if(recurrence == null){
                 pstmt.setNull(6, Types.INTEGER);
             }else{
-                pstmt.setInt(6, Recurrence.getIdByName(recurrence));
+                pstmt.setInt(6, getRecIdByName(recurrence));
             }
 
             pstmt.executeUpdate();
@@ -913,6 +913,7 @@ public class BDD {
                 "INNER JOIN " + table("Transaction") + "ON Modele_transaction.modele_transaction_id = Transaction.modele_transaction_id " +
                 "WHERE Utilisateur.id = ? AND Modele_transaction.sous_categorie_id = ? " + "GROUP BY MONTH(Transaction.date)";
 =======
+*/
     /**
      * Renvoie les 10 dernieres depenses toutes categories confondues
      *
@@ -946,6 +947,27 @@ public class BDD {
         return sommes;
     }
 
+    private int getRecIdByName(String recurrence)
+    {
+        String sql = "SELECT recurence_id FROM " + table("Recurence") + " WHERE periodicite = ?;";
+        int result = 0;
+        try{
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1, recurrence);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                result = rs.getInt(1);
+            }
+        }
+        catch(SQLException ex){
+            Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
+
     /**
      * Renvoie les 10 dernieres depenses tout confondu
      *
@@ -977,6 +999,31 @@ public class BDD {
         }
         return sommes;
     }
+
+    /**
+     * Récupère les diffèrentes récurences
+     *
+     * @return une ArrayList<Recurrence> contenant toutes les récurences de la base de donnée
+     */
+    public ArrayList<Recurrence> getRecurrence()
+    {
+        String sql = "SELECT * FROM " + table("Recurence") + ";";
+        ArrayList<Recurrence> recs = new ArrayList<>();
+        try{
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                recs.add(new Recurrence(rs.getInt("recurence_id"),rs.getString("periodicite")));
+            }
+        }
+        catch(SQLException ex){
+            Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return recs;
+
+    }
+
 
     /**
      * @param args the command line arguments
