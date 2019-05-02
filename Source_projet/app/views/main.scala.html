@@ -55,6 +55,7 @@
         <script type = "text/javascript">
                 /* Set the width of the side navigation to 250px and the left margin of the page content to 250px and add a black background color to body */
                 function openNav() {
+
                     document.getElementById("mySidenav").style.width = "50%";
                     document.getElementById("mySidenav").style.boxShadow = "0 0 0 10000px rgba(0,0,0,.50)";
                 }
@@ -62,7 +63,7 @@
                 /* Set the width of the side navigation to 0 and the left margin of the page content to 0, and the background color of body to white */
                 function closeNav() {
                     document.getElementById("mySidenav").style.width = "0";
-                    document.getElementById("mySidenav").style.boxShadow = "0 0 0 10000px rgba(0,0,0,0)";
+                    document.getElementById("mySidenav").style.boxShadow = "0 0 0 0px rgba(0,0,0,0)";
                 }
         </script>
 
@@ -204,7 +205,7 @@
         </script>
 
 
-
+        <!-- <div id="outNav" class="out-side-nav" onclick="closeNav()"></div> -->
 
         <div class="position-fixed" style="top:160px; right:5px; z-index:99999">
             <img id="btn-main" src="http://movilab.org/images/2/2f/Plus.png" onclick="openNav()"
@@ -463,8 +464,7 @@
             <div class ="container-fluid">
                     <!-- le href permet de rendre le truc clickable -->
                 <a class="navbar-brand" href="http://localhost:9000">
-                        <!-- Dans le truc clickable on met une image, l'image sera donc clickable -->
-                    <img src="@routes.Assets.versioned("images/logo_projet.png")"></img>
+                    <img src="@routes.Assets.versioned("images/logo_projet.png")" onclick="closeNav()"></img>
                 </a>
 
                     <!-- Censé être le bouton stylé sur les téléphones pour les menu -->
@@ -493,7 +493,7 @@
             </div>
         </nav>
 
-        <div class="text-center">
+        <div class="text-center" onclick="closeNav()">
             @content
         </div>
 
