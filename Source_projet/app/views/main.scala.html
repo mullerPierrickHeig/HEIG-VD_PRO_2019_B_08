@@ -392,6 +392,9 @@
                                     <div id="recurrence" class="hidden-categorie">
                                         <div class="form-group">
                                             <select name="recurrence" class="form-control">
+                                                @for(rec <- (HomeController.DB).getRecurrence()){
+                                                    <option value="@rec.getId()">@rec.getName()</option>
+                                                }
                                                 <option value ="">choose...</option>
                                             </select>
                                         </div> <!-- form-group end.// -->
