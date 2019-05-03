@@ -1,6 +1,8 @@
-@(error : String)
+@import controllers.BDDpackage.Utilisateur
 
-@main("Login") {
+@(error : String, user : Utilisateur)
+
+@main("Login")(user) {
     <div class="div-with-bg">
     @helper.form(action = helper.CSRF(routes.HomeController.LoginSubmit())) {
         <div class="container">

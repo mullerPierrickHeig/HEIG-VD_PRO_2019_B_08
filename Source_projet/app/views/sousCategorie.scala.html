@@ -4,11 +4,12 @@
 *@
 
 @import controllers.BDDpackage.Categorie
+@import controllers.BDDpackage.Utilisateur
 
 
-@(listCategories: List[Categorie], default: String )
+@(listCategories: List[Categorie], default: String, user : Utilisateur)
 
-@main("Sous Categorie") {
+@main("Sous Categorie")(user){
     <h1>Add a SousCategories peut-etre</h1>
 
     <form action="/AddSousCategorie">
