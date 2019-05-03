@@ -899,11 +899,11 @@ public class BDD {
      * @param idTypeTrans       id de du type de transaction
      * @return                  retoure 0 s'il n'y a pas eu de probleme, -1 autrement
      */
-    public double addMovement(int userID, double valeur, int idSousCategorie, int recurrenceId, String note, int idTypeTrans){
+    public int addMovement(int userID, double valeur, int idSousCategorie, int recurrenceId, String note, int idTypeTrans){
         String SQL = "INSERT INTO " + table("Modele_transaction") + "(valeur, date, note, utilisateur_id, sous_categorie_id, type_transaction_id, recurrence_id) " +
-                "VALUES ('"+ valeur +"'::float8::numeric::money, NOW(),?, ?, ?, ?, ?);";
-        return valeur;
-        /*try{
+                "VALUES ("+ valeur +", NOW(),?, ?, ?, ?, ?);";
+
+        try{
             PreparedStatement pstmt = conn.prepareStatement(SQL);
 
             //pstmt.setBigDecimal(1, valeur);
@@ -923,7 +923,7 @@ public class BDD {
         catch(SQLException ex){
             Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
             return -1;
-        }*/
+        }
     }
 
 
@@ -952,7 +952,7 @@ public class BDD {
                 "INNER JOIN " + table("Modele_transaction") + "ON Modele_transaction.utilisateur_id = Utilisateur.id " +
                 "INNER JOIN " + table("Transaction") + "ON Modele_transaction.modele_transaction_id = Transaction.modele_transaction_id " +
                 "WHERE Utilisateur.id = ? AND Modele_transaction.sous_categorie_id = ? " + "GROUP BY MONTH(Transaction.date)";
-=======
+
 */
     /**
      * Renvoie les 10 dernieres depenses toutes categories confondues
