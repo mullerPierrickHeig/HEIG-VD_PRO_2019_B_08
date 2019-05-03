@@ -347,10 +347,12 @@ public class HomeController extends Controller {
         }
     }
 
-    public Result AddIncome(){
-
-
+    public Result AddExpense(){
         DynamicForm form = formFactory.form().bindFromRequest();
+
+        //double amount = form.get("amount");
+        //int idCat = form.get("categorie");
+
         return redirect("/profil");
 
     }
