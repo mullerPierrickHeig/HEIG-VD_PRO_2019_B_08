@@ -1,6 +1,8 @@
-@(titre: String)
+@import controllers.BDDpackage.Utilisateur
 
-@main(titre: String) {
+@(titre: String, user : Utilisateur)
+
+@main(titre: String)(user) {
   <div class="container">
     <div class="row">
       <div class="col-md border shadow-lg p-4 mb-4 home-row" >
@@ -11,7 +13,11 @@
             </H4>          </div>
           <br>
           <div>
-              Actual balance : 
+              Actual balance : @if(user.getId() != 0){
+                @((HomeController.DB).getSoldeById(user.getId())) .-
+              } else{
+                You need to <a href="/profil">connect</a>
+              }
           </div>
         </div>
       </div>

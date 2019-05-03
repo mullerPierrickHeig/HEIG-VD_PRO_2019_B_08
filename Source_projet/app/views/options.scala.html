@@ -1,7 +1,7 @@
 @import controllers.BDDpackage.Utilisateur
 
-@(options : List[Boolean])
-@main("Options"){
+@(options : List[Boolean],user : Utilisateur)
+@main("Options")(user){
 
     <h1>Options</h1>
     <form action="/modifoptions" method="get">

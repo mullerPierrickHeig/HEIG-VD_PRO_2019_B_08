@@ -968,6 +968,26 @@ public class BDD {
         return result;
     }
 
+    public double getSoldeById(int userId)
+    {
+        String sql = "SELECT solde FROM " + table("Utilisateur") + " WHERE utilisateur_id = ?;";
+        double result = 0;
+        try{
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1, userId);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                result = rs.getDouble(1);
+            }
+        }
+        catch(SQLException ex){
+            Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
     /**
      * Renvoie les 10 dernieres depenses tout confondu
      *

@@ -9,7 +9,7 @@
 @(user: Utilisateur, Alerte: Int = 0, messageAlerte: String = "",pays : List[Pays],
         statut : List[Statut])
 
-@main("Profil") {
+@main("Profil")(user) {
     @* S'il y a une notification a afficher *@
     @if(Alerte == 1) {
         <div class="badAlert">
