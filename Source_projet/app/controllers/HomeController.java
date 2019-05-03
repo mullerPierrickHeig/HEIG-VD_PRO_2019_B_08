@@ -15,6 +15,7 @@ import play.data.FormFactory;
 import com.google.inject.Inject;
 import org.mindrot.jbcrypt.BCrypt;
 import java.util.*;
+import java.util.HashSet;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -140,7 +141,15 @@ public class HomeController extends Controller {
         }
         else
         {
-            solde = Double.parseDouble(form.get("solde"));
+            if(Double.parseDouble(form.get("solde")) >= 0)
+            {
+                solde = Double.parseDouble(form.get("solde"));
+            }
+            else
+            {
+                //Gestion faille HTML
+                solde = 0;
+            }
         }
 
 
@@ -348,13 +357,42 @@ public class HomeController extends Controller {
     }
 
     public Result AddExpense(){
-        DynamicForm form = formFactory.form().bindFromRequest();
 
-        //double amount = form.get("amount");
-        //int idCat = form.get("categorie");
+        return ModelTrans(1);
+    }
+
+    public Result AddIncome(){
+
+        return ModelTrans(2);
+    }
+
+    private Result ModelTrans(int id_trans){
+        /*DynamicForm form = formFactory.form().bindFromRequest();
+
+        double amount = Double.parseDouble(form.get("amount"));
+        int idCat = Int.parseInt(form.get("categorie"));
+        ArrayList<String> subsCat = new ArrayList<>{Arrays.asList(form.get("sous-categorie_1"),form.get("sous-categorie_2"),
+                form.get("sous-categorie_3"),form.get("sous-categorie_4"),form.get("sous-categorie_5"),
+                form.get("sous-categorie_6"),form.get("sous-categorie_7"),form.get("sous-categorie_8"),
+                form.get("sous-categorie_9"),form.get("sous-categorie_10"),form.get("sous-categorie_11"),
+                form.get("sous-categorie_12"),form.get("sous-categorie_13"))};
+
+        HashSet<String> uniquesSubcat = new HashSet(subsCat);
+        int idSubCat = 0;
+        for(String uniq : uniquesSubcat)
+        {
+            if(Int.parseInt(uniq) != 0)
+            {
+                idSubCat = 0;
+            }
+        }
+        int userId = user.getId();
+        int recId = form.get("recurrence");
+*/
+
+
 
         return redirect("/profil");
-
     }
 
 }
