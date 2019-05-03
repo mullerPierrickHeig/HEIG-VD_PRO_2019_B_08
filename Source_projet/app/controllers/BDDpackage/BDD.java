@@ -888,6 +888,46 @@ public class BDD {
         }
     }
 
+    /**
+     * Permet d'ajouter une depense
+     *
+     * @param userID            ID de l'utilisateur
+     * @param valeur            valeur de le depense
+     * @param idSousCategorie   id de sous categorie
+     * @param recurrenceId      id de la recurrence du payement
+     * @param note              note de l'utilisateur concernant le payement
+     * @param idTypeTrans       id de du type de transaction
+     * @return                  retoure 0 s'il n'y a pas eu de probleme, -1 autrement
+     */
+    public double addMovement(int userID, double valeur, int idSousCategorie, int recurrenceId, String note, int idTypeTrans){
+        String SQL = "INSERT INTO " + table("Modele_transaction") + "(valeur, date, note, utilisateur_id, sous_categorie_id, type_transaction_id, recurrence_id) " +
+                "VALUES ('"+ valeur +"'::float8::numeric::money, NOW(),?, ?, ?, ?, ?);";
+        return valeur;
+        /*try{
+            PreparedStatement pstmt = conn.prepareStatement(SQL);
+
+            //pstmt.setBigDecimal(1, valeur);
+            pstmt.setString(1, note);
+            pstmt.setInt(2, userID);
+            pstmt.setInt(3, idSousCategorie);
+            pstmt.setInt(4, idTypeTrans);
+            if(recurrenceId == 0){
+                pstmt.setNull(5, Types.INTEGER);
+            }else{
+                pstmt.setInt(5, recurrenceId);
+            }
+
+            pstmt.executeUpdate();
+            return 0;
+        }
+        catch(SQLException ex){
+            Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+            return -1;
+        }*/
+    }
+
+
+
     public ArrayList<Categorie> getAllCategories() {
         ArrayList<Categorie> categories = new ArrayList<Categorie>();
         try {
