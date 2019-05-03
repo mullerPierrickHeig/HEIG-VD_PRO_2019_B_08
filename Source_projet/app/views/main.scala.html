@@ -61,13 +61,14 @@
                     document.getElementById("mySidenav").style.width = "50%";
                     document.getElementById("mySidenav").style.boxShadow = "0 0 0 10000px rgba(0,0,0,.50)";
                     document.getElementById("logo-img").style.pointerEvents = "none";
+                    displaySousCatSel();
                 }
 
                 /* Set the width of the side navigation to 0 and the left margin of the page content to 0, and the background color of body to white */
                 function closeNav() {
                     document.getElementById("mySidenav").style.width = "0";
                     document.getElementById("mySidenav").style.boxShadow = "0 0 0 0px rgba(0,0,0,0)";
-                    document.getElementById("logo-img").style.pointerEvents = "href=\"http://localhost:9000\"";
+                    document.getElementById("logo-img").style.pointerEvents = "auto";
                 }
         </script>
 
@@ -204,7 +205,12 @@
         </script>
 
         <script type = "text/javascript">
-                function getCatId() {
+                function validateForm() {
+                    var x = document.forms["myForm"]["fname"].value;
+                    if (x == "") {
+                        alert("Name must be filled out");
+                        return false;
+                    }
                 }
         </script>
 
