@@ -55,15 +55,16 @@
         <script type = "text/javascript">
                 /* Set the width of the side navigation to 250px and the left margin of the page content to 250px and add a black background color to body */
                 function openNav() {
-
                     document.getElementById("mySidenav").style.width = "50%";
                     document.getElementById("mySidenav").style.boxShadow = "0 0 0 10000px rgba(0,0,0,.50)";
+                    document.getElementById("logo-img").style.pointerEvents = "none";
                 }
 
                 /* Set the width of the side navigation to 0 and the left margin of the page content to 0, and the background color of body to white */
                 function closeNav() {
                     document.getElementById("mySidenav").style.width = "0";
                     document.getElementById("mySidenav").style.boxShadow = "0 0 0 0px rgba(0,0,0,0)";
+                    document.getElementById("logo-img").style.pointerEvents = "href=\"http://localhost:9000\"";
                 }
         </script>
 
@@ -398,6 +399,35 @@
                                         </div> <!-- form-group end.// -->
                                     </div>
                                     <button type="submit" class="btn btn-primary btn-block"> Add </button>
+                                    <button type="button" data-toggle="modal" class="btn btn-secondary btn-block" data-target="#visualization"> Visualize </button>
+
+                                        <!-- Modal -->
+                                    <div class="modal fade" id="visualization" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                                    aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Visualisation</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <form action="" method="get">
+                                                    <div class="modal-body">
+                                                        <div><a>Base balance    :</a></div>
+                                                        <div><a>Expense entered :</a></div>
+                                                        <br>
+                                                        <div><a>New balance     :</a></div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                        <button type="submit" value="submit" class="btn btn-primary">Confirm changes</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </form>
                             </div>
                         </div>
@@ -463,7 +493,7 @@
                 <!-- container-fluid permet de prendre 100% de la page -->
             <div class ="container-fluid">
                     <!-- le href permet de rendre le truc clickable -->
-                <a class="navbar-brand" href="http://localhost:9000">
+                <a id="logo-img" class="navbar-brand" href="http://localhost:9000">
                     <img src="@routes.Assets.versioned("images/logo_projet.png")" onclick="closeNav()"></img>
                 </a>
 
@@ -493,7 +523,7 @@
             </div>
         </nav>
 
-        <div class="text-center" onclick="closeNav()">
+        <div id="main-div" class="text-center" onclick="closeNav()">
             @content
         </div>
 
