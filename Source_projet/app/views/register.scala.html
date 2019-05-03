@@ -1,11 +1,14 @@
 @import controllers.BDDpackage.Pays
 @import controllers.BDDpackage.Statut
+@import controllers.BDDpackage.Utilisateur
+
 
 @(pays : List[Pays],
         statut : List[Statut],
-        error : List[String])
+        error : List[String],
+        user : Utilisateur)
 
-@main("Register") {
+@main("Register")(user) {
     @if(error != null ) {
         <div class="badAlert">
             <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>

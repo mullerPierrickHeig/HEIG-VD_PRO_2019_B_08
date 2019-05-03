@@ -2,14 +2,14 @@
  Permet d'afficher toutes les catégories ainsi que les sous catégories
 *@
 
-
+@import controllers.BDDpackage.Utilisateur
 
 @import controllers.BDDpackage.Categorie
 
 @import controllers.BDDpackage.BDD
-@(categories: List[Categorie])
+@(categories: List[Categorie], user : Utilisateur)
 
-@main("Categories") {
+@main("Categories")(user) {
     <br>
         <div class="panel-group">
         @for(cat <- categories) {

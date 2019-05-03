@@ -26,7 +26,7 @@ import java.util.ArrayList;
 public class HomeController extends Controller {
 
     static public BDD DB = new BDD();
-    Utilisateur user = new Utilisateur();
+    public Utilisateur user = new Utilisateur();
 
     private final FormFactory formFactory;
     private String errorMessageLogin = "";
@@ -50,19 +50,19 @@ public class HomeController extends Controller {
         //DB.display_Sous_categorie(2);
 
         //DB.UtilisateurByID(1);
-        return ok(views.html.index.render("Compact Budget"));
+        return ok(views.html.index.render("Compact Budget",user));
     }
 
     public Result test() {
 
-        return ok(views.html.test.render());
+        return ok(views.html.index.render("test",user));
     }
 
     // Exemple pour passer un paramètre de HTML -> Java (via URL)
     // Fichier à toucher : HomeController + routes + views
     public Result testParam(String name) {
 
-        return ok(views.html.testParam.render(name));
+        return ok(views.html.index.render(name,user));
     }
 
     // Gestion du login
@@ -168,7 +168,7 @@ public class HomeController extends Controller {
             messageError.add("Erreur, veuillez choisir un autre username ou un autre email\n");
         }
 
-        return ok(views.html.register.render(pays,statut,messageError));
+        return ok(views.html.register.render(pays,statut,messageError,user));
 
     }
 
@@ -183,7 +183,7 @@ public class HomeController extends Controller {
         ArrayList<Statut> statut = new ArrayList<Statut>();
         statut = DB.get_Statut();
 
-        return ok(views.html.register.render(pays,statut,null));
+        return ok(views.html.register.render(pays,statut,null,user));
     }
 
     // Exemple pour passer un paramètre de java -> HTML
@@ -193,7 +193,7 @@ public class HomeController extends Controller {
         // Get user_id
         if(user.getId() == 0)
         {
-            return ok( views.html.Login.render(errorMessageLogin));
+            return ok( views.html.Login.render(errorMessageLogin,user));
         }
         else
         {
@@ -224,7 +224,7 @@ public class HomeController extends Controller {
         ArrayList<Categorie> listCategorie = new ArrayList<Categorie>();
         listCategorie = DB.display_Categories();
 
-        return ok( views.html.Categorie.render( listCategorie) );
+        return ok( views.html.Categorie.render( listCategorie,user));
     }
 
     // Permet d'ajouter une sous catégorie à la base de donnée
@@ -233,7 +233,7 @@ public class HomeController extends Controller {
        ArrayList<Categorie> listCategorie = new ArrayList<Categorie>();
        listCategorie = DB.display_Categories();
 
-        return ok( views.html.sousCategorie.render( listCategorie, defaultSelect) );
+        return ok( views.html.sousCategorie.render( listCategorie, defaultSelect,user) );
     }
 
     // Permet d'ajouter une sous catégorie
@@ -274,7 +274,7 @@ public class HomeController extends Controller {
         }
         else
         {
-            return ok(views.html.options.render(user.getOptions()));
+            return ok(views.html.options.render(user.getOptions(),user));
         }
     }
 
@@ -283,7 +283,7 @@ public class HomeController extends Controller {
         //return ok(views.html.index.render(Option));
         if(user.getId() == 0)
         {
-            return ok(views.html.index.render("Compact Budget"));
+            return ok(views.html.index.render("Compact Budget",user));
         }
         else
         {
@@ -303,7 +303,7 @@ public class HomeController extends Controller {
 
     public Result ModifProfile() {
         if (user.getId() == 0) {
-            return ok(views.html.index.render("Compact Budget"));
+            return ok(views.html.index.render("Compact Budget",user));
         } else {
             DynamicForm form = formFactory.form().bindFromRequest();
 
@@ -347,5 +347,12 @@ public class HomeController extends Controller {
         }
     }
 
+    public Result AddIncome(){
+
+
+        DynamicForm form = formFactory.form().bindFromRequest();
+        return redirect("/profil");
+
+    }
 
 }
