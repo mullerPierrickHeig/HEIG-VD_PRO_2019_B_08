@@ -1,67 +1,44 @@
 @import controllers.BDDpackage.Utilisateur
+@import controllers.BDDpackage.BDD
+@import controllers.BDDpackage.Transaction
 
 @(titre: String, user : Utilisateur)
 
 @main(titre: String)(user) {
-    <table class="table">
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">First</th>
-                <th scope="col">Last</th>
-                <th scope="col">Handle</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>mdo</td>
-            </tr>
-            <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>fat</td>
-            </tr>
-            <tr>
-                <th scope="row">3</th>
-                <td>Larry</td>
-                <td>the Bird</td>
-                <td>twitter</td>
-            </tr>
-        </tbody>
-    </table>
 
-    <table class="table">
-        <thead class="thead-light">
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">First</th>
-                <th scope="col">Last</th>
-                <th scope="col">Handle</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>mdo</td>
-            </tr>
-            <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>fat</td>
-            </tr>
-            <tr>
-                <th scope="row">3</th>
-                <td>Larry</td>
-                <td>the Bird</td>
-                <td>twitter</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="container">
+        <div class="row">
+            <div class="col-md border shadow-lg p-4 mb-4 home-row">
+                <table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">montant</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @for(trans <- (HomeController.DB).getAllTransaction(user.getId())){
+                            <tr>
+                                <th scope="row">@trans.id</th>
+                                <td>@trans.date</td>
+                                @if(trans.idRecurrence == 1){
+                                    <td style="color:#53a93f">@trans.valeur</td>
+                                } else{
+                                    <td style="color:#b94a48">-@trans.valeur</td>
+                                }
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="col-md border shadow-lg p-4 mb-4 home-row">
+
+            </div>
+        </div>
+    </div>
+
 }

@@ -385,7 +385,7 @@ public class HomeController extends Controller {
         int recId = Integer.parseInt(form.get("recurrence"));
         String note = form.get("note");
 
-        int result = DB.addMovement(userId,amount,idSubCat,recId,"",id_trans);
+        int result = DB.addMovement(userId,amount,idSubCat,recId,note,id_trans);
         user = DB.UtilisateurByID(userId);
         return redirect("/");
 
