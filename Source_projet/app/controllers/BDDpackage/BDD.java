@@ -731,11 +731,11 @@ public class BDD {
             ResultSet rs = st.getGeneratedKeys();
             if (rs.next()){
                 idSousCat = rs.getInt(1);
-                Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, "Nice !");
+
                 ok = true;
             }
-
-            // updateSousCatPerso(idSousCat, idUser);
+            Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, "test2: " + idUser, "test3: " + idUser);
+            updateSousCatPerso(idSousCat, idUser);
 
             //st.executeUpdate(SQL);
             //ok = true;
@@ -1105,9 +1105,11 @@ public class BDD {
         try{
             CallableStatement cs = conn.prepareCall(SQL);
 
-            cs.setInt(1, id_sous_cat);
-            cs.setInt(2, id_user);
+            Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, "id user2 :" + id_user, "id user :" + id_user );
 
+            cs.setInt(1, id_user);
+            cs.setInt(2, id_sous_cat);
+            
             cs.execute();
         }
         catch(SQLException ex){
