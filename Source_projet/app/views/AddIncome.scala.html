@@ -1,0 +1,56 @@
+@*
+ Permet d'afficher une liste de sous catégorie
+
+*@
+
+@import controllers.BDDpackage.Utilisateur
+
+@(user : Utilisateur)
+<div class="card-header" id="headingTwo">
+    <h5 class="mb-0">
+        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+            Add income
+        </button>
+    </h5>
+</div>
+<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+    <div class="card-body sidebar-menu-text">
+        <form>
+            <div class="form-group">
+                <label>Amount</label>
+                <input type="text" name="amount" class="form-control" placeholder="">
+            </div> <!-- form-group end.// -->
+            <div class="form-group">
+                <label>Categorie</label>
+                <select  id="catSel-income" name="categorie" class="form-control" onchange="displaySousCatSelIncome();">
+
+                    @for(cat <- (HomeController.DB).getAllCategories()) {
+                        <option value="@cat.id">@cat.nom</option>
+                    }
+                </select>
+            </div> <!-- form-group end.// -->
+
+            <div id="subCat-income" class="hidden-categorie">
+                <div class="form-group">
+                    <label>Subcategorie</label>
+                    <select name="sous-categorie" class="form-control">
+                    @for(sousCat <- (HomeController.DB).get_Sous_categorie(1)){
+                        <option value ="@sousCat.id">@sousCat.nom</option>
+                    }
+                    </select>
+                </div> <!-- form-group end.// -->
+            </div>
+            <input id="chk1-income" type="checkbox" data-toggle="toggle" onclick="displayRecurrenceIncome()">
+            <label for="check1">Recurrence</label>
+            <div id="recurrence-income" class="hidden-categorie">
+                <div class="form-group">
+                    <select name="recurrence" class="form-control">
+                        <option value ="">choose...</option>
+                    </select>
+                </div> <!-- form-group end.// -->
+            </div>
+            <button type="submit" class="btn btn-primary btn-block"> Add </button>
+        </form>
+        }
+    </div>
+</div>
