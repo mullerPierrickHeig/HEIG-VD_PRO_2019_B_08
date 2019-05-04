@@ -400,7 +400,7 @@ public class HomeController extends Controller {
 
 
         int result = DB.addMovement(userId,amount,idSubCat,recId,"",id_trans);
-
+        user = DB.UtilisateurByID(userId);
         return redirect("/");
 
     }

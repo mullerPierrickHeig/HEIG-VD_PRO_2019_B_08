@@ -62,10 +62,10 @@
                 var textFinalSolde = "New balance     :";
 
                 //recuperation Amount
-                var tmpAmount = document.getElementById("amountId").value;
+                var tmpAmount = Math.round(document.getElementById("amountId").value * 100) / 100;
 
                 //Calcul solde après mouvement
-                var finalSolde = @user.getSolde() - tmpAmount;
+                var finalSolde = Math.round((@user.getSolde() - tmpAmount) * 100) / 100;
 
                 //Création des affichages
                 textAmount = textAmount.concat(tmpAmount);
@@ -81,8 +81,12 @@
 
             function sendVisualize()
             {
-                closeNav();
-                document.forms["form-add-expense"].submit();
+                if(validateFormExpense())
+                {
+                    closeNav();
+                    document.forms["form-add-expense"].submit();
+                }
+
                 //document.getElementsByName("form-add-expense").submit();
             }
         </script>
@@ -195,6 +199,7 @@
                         return false;
                     }
                     x = document.forms["form-add-expense"]["categorie"].value;
+                    return true;
                 }
         </script>
 
