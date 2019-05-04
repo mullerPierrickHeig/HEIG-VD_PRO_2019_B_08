@@ -429,4 +429,12 @@ public class HomeController extends Controller {
 
     }
 
+    public Result Historique()
+    {
+        if(user.getId() == 0)
+        {
+            return redirect("/profil");
+        }
+        return ok(views.html.historique.render("Historique",user));
+    }
 }

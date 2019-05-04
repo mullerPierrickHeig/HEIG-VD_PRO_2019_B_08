@@ -914,13 +914,22 @@ public class BDD {
         String SQL = "INSERT INTO " + table("modele_transaction") + "(valeur, date, note, utilisateur_id, sous_categorie_id, type_transaction_id, recurrence_id) " +
                 "VALUES ("+ valeur +", NOW(),?, ?, ?, ?, ?);";
 
-        try{
+        try {
             PreparedStatement pstmt = conn.prepareStatement(SQL);
 
             //pstmt.setBigDecimal(1, valeur);
             pstmt.setString(1, note);
             pstmt.setInt(2, userID);
-            pstmt.setInt(3, idSousCategorie);
+            //Gestion sans categorisation;
+            if (idSousCategorie == 0)
+            {
+                pstmt.setInt(3, 98);
+            }
+            else
+            {
+                pstmt.setInt(3, idSousCategorie);
+            }
+
             pstmt.setInt(4, idTypeTrans);
             if(recurrenceId == 0){
                 pstmt.setNull(5, Types.INTEGER);

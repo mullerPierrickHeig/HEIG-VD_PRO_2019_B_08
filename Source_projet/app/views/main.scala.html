@@ -510,7 +510,7 @@
                                             <select name="sous-categorie" class="form-control">
                                                 @for(sousCat <- (HomeController.DB).get_Sous_categorie(1)){
                                                     <option value ="@sousCat.id">@sousCat.nom</option>
-                                                }
+                                                }}
                                             </select>
                                         </div> <!-- form-group end.// -->
                                     </div>
@@ -525,7 +525,7 @@
                                     </div>
                                     <button type="submit" class="btn btn-primary btn-block"> Add </button>
                                 </form>
-                            }
+
                             </div>
                         </div>
                     </div>
@@ -562,7 +562,7 @@
                             <a class="nav-link" href="test">Statistiques</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="test">Historique</a>
+                            <a class="nav-link" href="historique">Historique</a>
                         </li>
                     </ul>
                 </div>
