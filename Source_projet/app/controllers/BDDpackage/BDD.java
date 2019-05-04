@@ -705,8 +705,9 @@ public class BDD {
      * @params ...
      * @throws
      */
-    public boolean insert_Sous_categorie(SousCategorie sousCategorie){
+    public boolean insert_Sous_categorie(SousCategorie sousCategorie, int idUser){
         boolean ok = false;
+        int idSousCat = 0 ;
 
         try {
 
@@ -717,13 +718,25 @@ public class BDD {
 
             String SQL = "INSERT INTO "
                     + table("sous_categorie")
-                    + "(nom, categorie_id) "
+                    + "(nom, categorie_id, is_global) "
                     + "VALUES "
-                    + "('" + sousCategorie.nom +"'," + sousCategorie.categorie.id + ");";
+                    + "('" + sousCategorie.nom +"'," + sousCategorie.categorie.id + ", false );";
 
             Statement st = conn.createStatement();
-            st.executeUpdate(SQL);
-            ok = true;
+
+            st.executeUpdate(SQL,Statement.RETURN_GENERATED_KEYS);
+            // Récupère l'id de la nouvelle sous catégorie
+            ResultSet rs = st.getGeneratedKeys();
+            if (rs.next()){
+                idSousCat = rs.getInt(1);
+                Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, "Nice !");
+                ok = true;
+            }
+
+            // updateSousCatPerso(idSousCat, idUser);
+
+            //st.executeUpdate(SQL);
+            //ok = true;
 
         } catch (SQLException ex) {
             Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
