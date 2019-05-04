@@ -421,7 +421,7 @@ public class HomeController extends Controller {
 
         int userId = user.getId();
         int recId = Integer.parseInt(form.get("recurrence"));
-
+        String note = form.get("note");
 
         int result = DB.addMovement(userId,amount,idSubCat,recId,"",id_trans);
         user = DB.UtilisateurByID(userId);
@@ -429,4 +429,12 @@ public class HomeController extends Controller {
 
     }
 
+    public Result Historique()
+    {
+        if(user.getId() == 0)
+        {
+            return redirect("/profil");
+        }
+        return ok(views.html.historique.render("Historique",user));
+    }
 }
