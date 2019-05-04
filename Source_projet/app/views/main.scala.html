@@ -456,7 +456,7 @@
 
                                     <div class="input-group">
                                         <div class="input-group-prepend">
-                                            <span class="input-group-text" style="background:  #8c8c8c" style="padding-right: 20px">Note</span>
+                                            <span name="note" class="input-group-text" style="background:  #8c8c8c" style="padding-right: 20px">Note</span>
                                         </div>
                                         <textarea class="form-control" aria-label="With textarea"></textarea>
                                     </div>
@@ -570,7 +570,7 @@
                 <!-- container-fluid permet de prendre 100% de la page -->
             <div class ="container-fluid">
                     <!-- le href permet de rendre le truc clickable -->
-                <a id="logo-img" class="navbar-brand" href="http://localhost:9000">
+                <a id="logo-img" class="navbar-brand" href="/">
                     <img src="@routes.Assets.versioned("images/logo_projet.png")" onclick="closeNav()"></img>
                 </a>
 
@@ -581,7 +581,7 @@
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item active">
-                            <a class="nav-link" href="http://localhost:9000">Home</a>
+                            <a class="nav-link" href="/">Home</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="profil">Profil</a>
