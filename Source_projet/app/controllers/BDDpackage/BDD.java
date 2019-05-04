@@ -1085,6 +1085,23 @@ public class BDD {
 
     }
 
+    public void updateSousCatPerso(int id_sous_cat, int id_user){
+        String SQL  = "CALL add_sous_cat_perso(?, ?)";
+
+        try{
+            PreparedStatement pstmt = conn.prepareStatement(SQL);
+
+            pstmt.setInt(1, id_sous_cat);
+            pstmt.setInt(2, id_user);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            rs.execute();
+        }
+        catch(SQLException ex){
+            Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     /**
      * @param args the command line arguments
