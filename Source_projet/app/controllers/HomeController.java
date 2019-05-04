@@ -44,26 +44,10 @@ public class HomeController extends Controller {
      * this method will be called when the application receives a
      * <code>GET</code> request with a path of <code>/</code>.
      */
+    // Page d'accueil
     public Result index()  throws SQLException {
 
-        //DB.display_Categories();
-
-        //DB.display_Sous_categorie(2);
-
-        //DB.UtilisateurByID(1);
         return ok(views.html.index.render("Compact Budget",user));
-    }
-
-    public Result test() {
-
-        return ok(views.html.index.render("test",user));
-    }
-
-    // Exemple pour passer un paramètre de HTML -> Java (via URL)
-    // Fichier à toucher : HomeController + routes + views
-    public Result testParam(String name) {
-
-        return ok(views.html.index.render(name,user));
     }
 
     // Gestion du login
