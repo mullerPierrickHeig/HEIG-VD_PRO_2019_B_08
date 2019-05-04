@@ -297,9 +297,7 @@
                                         <div class="form-group">
                                             <label>Subcategorie</label>
                                             <select name="sous-categorie_4" class="form-control">
-
                                                 <option value="0" selected>Choose...</option>
-
                                             @for(sousCat <- (HomeController.DB).get_Sous_categorie(4)){
                                                 @if(sousCat.is_global || (HomeController.DB).belongToUser(sousCat.id, user.getId() ) ) {
                                                     <option value ="@sousCat.id">@sousCat.nom</option>
