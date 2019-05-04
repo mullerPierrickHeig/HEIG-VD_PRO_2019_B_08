@@ -81,6 +81,7 @@
 
             function sendVisualize()
             {
+                closeNav();
                 document.forms["form-add-expense"].submit();
                 //document.getElementsByName("form-add-expense").submit();
             }
@@ -93,13 +94,14 @@
                     document.getElementById("mySidenav").style.width = "50%";
                     document.getElementById("mySidenav").style.boxShadow = "0 0 0 10000px rgba(0,0,0,.50)";
                     document.getElementById("logo-img").style.pointerEvents = "none";
+                    displaySousCatSel();
                 }
 
                 /* Set the width of the side navigation to 0 and the left margin of the page content to 0, and the background color of body to white */
                 function closeNav() {
                     document.getElementById("mySidenav").style.width = "0";
                     document.getElementById("mySidenav").style.boxShadow = "0 0 0 0px rgba(0,0,0,0)";
-                    document.getElementById("logo-img").style.pointerEvents = "href=\"http://localhost:9000\"";
+                    document.getElementById("logo-img").style.pointerEvents = "auto";
                 }
         </script>
 
@@ -118,7 +120,6 @@
                 document.getElementById("subCat12").style.display = "none";
                 document.getElementById("subCat13").style.display = "none";
                 document.getElementById("subCat16").style.display = "none";
-
             }
         </script>
 
@@ -126,7 +127,7 @@
                 function displaySousCatSel() {
                     var e = document.getElementById("catSel");
                     var f = e.options[e.selectedIndex].value;
-                    if(f == 9) {
+                    if(f == 9 || f == 0) {
                         hideAnySubcat();
                     } else {
                         var i = 0;
@@ -182,7 +183,18 @@
         </script>
 
         <script type = "text/javascript">
-                function getCatId() {
+                function validateFormExpense() {
+                    var x = document.forms["form-add-expense"]["categorie"].value;
+                    if (x == "0" || x == 0) {
+                        alert("Choose a categorie");
+                        return false;
+                    }
+                    x = document.forms["form-add-expense"]["categorie"].value;
+                    if (x == "0" || x == 0) {
+                        alert("Choose a categorie");
+                        return false;
+                    }
+                    x = document.forms["form-add-expense"]["categorie"].value;
                 }
         </script>
 
@@ -218,7 +230,7 @@
                                     <div class="form-group">
                                         <label>Categorie</label>
                                         <select  id="catSel" name="categorie" class="form-control" onchange="displaySousCatSel();">
-                                            <option name="0" selected>Choose...</option>
+                                            <option value="0" selected>Choose...</option>
                                         @for(cat <- (HomeController.DB).getAllCategories()) {
                                             <option value="@cat.id">@cat.nom</option>
                                         }
@@ -417,6 +429,7 @@
                                     <div id="recurrence" class="hidden-categorie">
                                         <div class="form-group">
                                             <select name="recurrence" class="form-control">
+                                                <option value ="0">choose...</option>
                                                 @for(rec <- (HomeController.DB).getRecurrence()){
                                                     <option value="@rec.getId()">@rec.getName()</option>
                                                 }
@@ -448,6 +461,7 @@
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                                         <button type="button" onclick="sendVisualize();" class="btn btn-primary">Confirm changes</button>
+
                                                     </div>
                                                 </form>
                                             </div>
