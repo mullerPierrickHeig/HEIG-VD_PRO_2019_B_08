@@ -135,7 +135,7 @@ public class BDD {
     }
 
     /**
-     * Permet de mettre à jour le profil d'un utilisateur, sans le mot de passe ou les options
+     * Permet de mettre à jour le profil d'un utilisateur, sans le mot de passe, les options ou le solde
      * @param userId ID de l'utilisateur à modifier
      * @param prenom prénom de l'utilisateur
      * @param nom nom de l'utilisateur
@@ -292,7 +292,8 @@ public class BDD {
                         rs.getString("droit_id"),
                         statutString(rs.getInt("statut_id")),
                         paysString(rs.getInt("pays_id")),
-                        optionsString(rs.getInt("options_id")) );
+                        optionsString(rs.getInt("options_id")),
+                        rs.getDouble("solde"));
                 
             }
         } catch (SQLException ex) {
