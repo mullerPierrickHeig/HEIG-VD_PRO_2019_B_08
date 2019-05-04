@@ -43,10 +43,15 @@
                         <div id=@("addcat"+cat.id) class="panel-collapse collapse">
                             <div class="panel-body">
                                 <div class="div-centered-panel">
-                                    <form action="/AddSousCategorie">
+                                @helper.form(action = helper.CSRF(routes.HomeController.addSousCategorie())) {
+                                    <form >
                                         <input type="text" name="nom">
+                                        <input type="hidden" name="categorie_id" value="@(cat.id)">
+                                        <input type="hidden" name="idUser" value="@user.getId()">
                                         <input type="submit" value="Add">
                                     </form>
+                                }
+
                                 </div>
                             </div>
                         </div>

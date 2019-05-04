@@ -53,6 +53,43 @@
     </head>
 
     <body>
+        <!-- -->
+
+        <script type="text/javascript">
+            function visualiseExpense(){
+                //text base
+                var textAmount = "Expense entered :";
+                var textFinalSolde = "New balance     :";
+
+                //recuperation Amount
+                var tmpAmount = Math.round(document.getElementById("amountId").value * 100) / 100;
+
+                //Calcul solde après mouvement
+                var finalSolde = Math.round((@user.getSolde() - tmpAmount) * 100) / 100;
+
+                //Création des affichages
+                textAmount = textAmount.concat(tmpAmount);
+                textFinalSolde = textFinalSolde.concat(finalSolde);
+
+                //affichage
+                document.getElementById("amountVisualize").innerHTML = textAmount;
+                document.getElementById("afterSolde").innerHTML = textFinalSolde;
+
+
+            }
+
+
+            function sendVisualize()
+            {
+                if(validateFormExpense())
+                {
+                    closeNav();
+                    document.forms["form-add-expense"].submit();
+                }
+
+                //document.getElementsByName("form-add-expense").submit();
+            }
+        </script>
         <!-- Ajouter at + decommenter pour gestion bouton add user -->
         <!-- if( user.getId() != 0){ -->
         <script type = "text/javascript">
@@ -160,6 +197,7 @@
                         return false;
                     }
                     x = document.forms["form-add-expense"]["categorie"].value;
+                    return true;
                 }
         </script>
 
@@ -194,7 +232,7 @@
                                 <form>
                                     <div class="form-group">
                                         <label>Amount</label>
-                                        <input type="number" name="amount" step=0.01 value="0" min="0" max="100000000" class="form-control"  placeholder="">
+                                        <input type="number" name="amount" id="amountId" step=0.05 value="0" min="0" max="100000000" class="form-control"  placeholder="">
                                     </div> <!-- form-group end.// -->
                                     <div class="form-group">
                                         <label>Categorie</label>
@@ -390,7 +428,7 @@
 
                                     <div class="input-group">
                                         <div class="input-group-prepend">
-                                            <span class="input-group-text">Note</span>
+                                            <span class="input-group-text" style="background:  #8c8c8c" style="padding-right: 20px">Note</span>
                                         </div>
                                         <textarea class="form-control" aria-label="With textarea"></textarea>
                                     </div>
@@ -408,8 +446,9 @@
                                             </select>
                                         </div> <!-- form-group end.// -->
                                     </div>
-                                    <button type="submit" class="btn btn-primary btn-block"> Add </button>
-                                    <button type="button" data-toggle="modal" class="btn btn-secondary btn-block" data-target="#visualization"> Visualize </button>
+                                    <button type="submit" class="btn btn-primary btn-block">Add</button>
+                                    <button type="button" data-toggle="modal" onclick="visualiseExpense();" class="btn btn-secondary btn-block" data-target="#visualization"> Visualize </button>
+
                                         <!-- Modal -->
                                     <div class="modal fade" id="visualization" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
                                     aria-hidden="true">
@@ -423,15 +462,15 @@
                                                 </div>
                                                 <form action="" method="get">
                                                     <div class="modal-body">
-                                                        <div><a>Base balance    :</a></div>
-                                                        <div><a>Expense entered :</a></div>
+                                                        <div><a>Base balance    : @user.getSolde()</a></div>
+                                                        <div><a id="amountVisualize"></a></div>
                                                         <br>
-                                                        <div><a>New balance     :</a></div>
+                                                        <div><a id="afterSolde"></a></div>
                                                     </div>
 
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                        <button type="submit" value="submit" class="btn btn-primary" onclick="closeNav()">Confirm changes</button>
+                                                        <button type="button" onclick="sendVisualize();" class="btn btn-primary">Confirm changes</button>
                                                     </div>
                                                 </form>
                                             </div>

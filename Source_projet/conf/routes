@@ -10,7 +10,7 @@ GET		/profil					        controllers.HomeController.Profil
 GET     /deco                          controllers.HomeController.Disconnect
 GET		/categorie				        controllers.HomeController.Categorie
 GET		/sousCategorie					controllers.HomeController.sousCategorie(default: String ?= "")
-GET		/AddSousCategorie				controllers.HomeController.addSousCategorie(nom : String, categorie_id : Int)
+POST	/AddSousCategorie				controllers.HomeController.addSousCategorie
 POST    /login                         controllers.HomeController.LoginSubmit
 POST    /register                      controllers.HomeController.RegisterSubmit
 GET     /register                      controllers.HomeController.Register

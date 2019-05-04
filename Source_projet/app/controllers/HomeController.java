@@ -230,10 +230,18 @@ public class HomeController extends Controller {
     // Exemple pour passer un paramètre de java -> HTML
     public Result Categorie() {
 
-        ArrayList<Categorie> listCategorie = new ArrayList<Categorie>();
-        listCategorie = DB.display_Categories();
+        // Si il n'est pas loggé
+        if(user.getId() == 0)
+        {   // Affiche la page de logine
+            return ok( views.html.Login.render(errorMessageLogin,user));
+        }
+        else {
+            // Sinon, affiche les catégorie
+            ArrayList<Categorie> listCategorie = new ArrayList<Categorie>();
+            listCategorie = DB.display_Categories();
 
-        return ok( views.html.Categorie.render( listCategorie,user));
+            return ok(views.html.Categorie.render(listCategorie, user));
+        }
     }
 
     // Permet d'ajouter une sous catégorie à la base de donnée
@@ -246,7 +254,23 @@ public class HomeController extends Controller {
     }
 
     // Permet d'ajouter une sous catégorie
-    public Result addSousCategorie(String nom, int categorie_id) {
+    public Result addSousCategorie() {
+
+        DynamicForm form = formFactory.form().bindFromRequest();
+        // Récupère les informations depuis une requete POST
+        String nom = form.get("nom");
+        if (nom == "")
+        {
+            return redirect("/");
+        }
+        int categorie_id = Integer.parseInt(form.get("categorie_id"));
+        int idUser = Integer.parseInt(form.get("idUser"));
+        if (idUser == 0)
+        {
+            return redirect("/profil");
+        }
+
+
 
         int alerte = 2;
         String message = "Success insertion ";
@@ -258,7 +282,7 @@ public class HomeController extends Controller {
 
         // Test la valeur de retour !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         // Ajout d'une notif 
-        if (!DB.insert_Sous_categorie( sousCategorie)){
+        if (!DB.insert_Sous_categorie( sousCategorie, idUser)){
             alerte = 1;
             message = "Error: insertion failed !";
         }
@@ -400,7 +424,7 @@ public class HomeController extends Controller {
 
 
         int result = DB.addMovement(userId,amount,idSubCat,recId,"",id_trans);
-
+        user = DB.UtilisateurByID(userId);
         return redirect("/");
 
     }

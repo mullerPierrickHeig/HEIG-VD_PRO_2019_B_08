@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.Types;
+import java.sql.CallableStatement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -135,7 +136,7 @@ public class BDD {
     }
 
     /**
-     * Permet de mettre à jour le profil d'un utilisateur, sans le mot de passe ou les options
+     * Permet de mettre à jour le profil d'un utilisateur, sans le mot de passe, les options ou le solde
      * @param userId ID de l'utilisateur à modifier
      * @param prenom prénom de l'utilisateur
      * @param nom nom de l'utilisateur
@@ -292,7 +293,8 @@ public class BDD {
                         rs.getString("droit_id"),
                         statutString(rs.getInt("statut_id")),
                         paysString(rs.getInt("pays_id")),
-                        optionsString(rs.getInt("options_id")) );
+                        optionsString(rs.getInt("options_id")),
+                        rs.getDouble("solde"));
                 
             }
         } catch (SQLException ex) {
@@ -705,8 +707,9 @@ public class BDD {
      * @params ...
      * @throws
      */
-    public boolean insert_Sous_categorie(SousCategorie sousCategorie){
+    public boolean insert_Sous_categorie(SousCategorie sousCategorie, int idUser){
         boolean ok = false;
+        int idSousCat = 0 ;
 
         try {
 
@@ -717,13 +720,25 @@ public class BDD {
 
             String SQL = "INSERT INTO "
                     + table("sous_categorie")
-                    + "(nom, categorie_id) "
+                    + "(nom, categorie_id, is_global) "
                     + "VALUES "
-                    + "('" + sousCategorie.nom +"'," + sousCategorie.categorie.id + ");";
+                    + "('" + sousCategorie.nom +"'," + sousCategorie.categorie.id + ", false );";
 
             Statement st = conn.createStatement();
-            st.executeUpdate(SQL);
-            ok = true;
+
+            st.executeUpdate(SQL,Statement.RETURN_GENERATED_KEYS);
+            // Récupère l'id de la nouvelle sous catégorie
+            ResultSet rs = st.getGeneratedKeys();
+            if (rs.next()){
+                idSousCat = rs.getInt(1);
+
+                ok = true;
+            }
+            Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, "test2: " + idUser, "test3: " + idUser);
+            updateSousCatPerso(idSousCat, idUser);
+
+            //st.executeUpdate(SQL);
+            //ok = true;
 
         } catch (SQLException ex) {
             Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
@@ -1084,6 +1099,23 @@ public class BDD {
 
     }
 
+    public void updateSousCatPerso(int id_sous_cat, int id_user){
+        String SQL  = "CALL add_sous_cat_perso(?, ?)";
+
+        try{
+            CallableStatement cs = conn.prepareCall(SQL);
+
+            Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, "id user2 :" + id_user, "id user :" + id_user );
+
+            cs.setInt(1, id_user);
+            cs.setInt(2, id_sous_cat);
+            
+            cs.execute();
+        }
+        catch(SQLException ex){
+            Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     /**
      * @param args the command line arguments
