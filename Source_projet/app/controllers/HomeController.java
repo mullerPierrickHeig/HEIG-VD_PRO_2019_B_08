@@ -15,6 +15,7 @@ import play.data.FormFactory;
 import com.google.inject.Inject;
 import org.mindrot.jbcrypt.BCrypt;
 import java.util.*;
+import java.util.HashSet;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -140,7 +141,15 @@ public class HomeController extends Controller {
         }
         else
         {
-            solde = Double.parseDouble(form.get("solde"));
+            if(Double.parseDouble(form.get("solde")) >= 0)
+            {
+                solde = Double.parseDouble(form.get("solde"));
+            }
+            else
+            {
+                //Gestion faille HTML
+                solde = 0;
+            }
         }
 
 
@@ -348,12 +357,51 @@ public class HomeController extends Controller {
     }
 
     public Result AddExpense(){
+
+        return ModelTrans(1);
+    }
+
+    public Result AddIncome(){
+
+        return ModelTrans(2);
+    }
+
+    private Result ModelTrans(int id_trans){
         DynamicForm form = formFactory.form().bindFromRequest();
 
-        //double amount = form.get("amount");
-        //int idCat = form.get("categorie");
+        double amount = Double.parseDouble(form.get("amount"));
+        if (amount <= 0)
+        {
+            return redirect("/");
+        }
 
-        return redirect("/profil");
+
+        //int idCat = Integer.parseInt(form.get("categorie"));
+        ArrayList<String> subsCat = new ArrayList<>(Arrays.asList(form.get("sous-categorie_1"),form.get("sous-categorie_2"),
+                form.get("sous-categorie_3"),form.get("sous-categorie_4"),form.get("sous-categorie_5"),
+                form.get("sous-categorie_6"),form.get("sous-categorie_7"),form.get("sous-categorie_8"),
+                form.get("sous-categorie_9"),form.get("sous-categorie_10"),form.get("sous-categorie_11"),
+                form.get("sous-categorie_12"),form.get("sous-categorie_13")));
+
+        HashSet<String> uniquesSubcat = new HashSet(subsCat);
+        int idSubCat = 0;
+        for(String uniq : uniquesSubcat)
+        {
+            if(Integer.parseInt(uniq) != 0)
+            {
+                idSubCat = Integer.parseInt(uniq);
+            }
+        }
+        //return ok(views.html.index.render(Integer.toString(amount),user));
+        //return ok(views.html.index.render(Double.toString(amount),user));
+
+        int userId = user.getId();
+        int recId = Integer.parseInt(form.get("recurrence"));
+
+
+        int result = DB.addMovement(userId,amount,idSubCat,recId,"",id_trans);
+
+        return redirect("/");
 
     }
 

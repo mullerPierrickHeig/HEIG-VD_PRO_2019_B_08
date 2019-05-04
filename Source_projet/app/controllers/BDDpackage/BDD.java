@@ -68,7 +68,7 @@ public class BDD {
      * @return Nom de la table au bon format
      */
     private String table(String TableName) {
-        return "Public.\"" + TableName + "\" ";   
+        return "public.\"" + TableName + "\" ";
     }
     /**
      * Permet de convertir l'id d'un pays en string
@@ -81,7 +81,7 @@ public class BDD {
         
         try {
             String SQL = "SELECT * "
-                    + "FROM " + table("Pays")
+                    + "FROM " + table("pays")
                     + "WHERE pays_id = ?";
             
             PreparedStatement pstmt = conn.prepareStatement(SQL);
@@ -111,7 +111,7 @@ public class BDD {
         
         try {
             String SQL = "SELECT * "
-                    + "FROM " + table("Options")
+                    + "FROM " + table("options")
                     + " WHERE options_id = ? ;";
             
             PreparedStatement pstmt = conn.prepareStatement(SQL);
@@ -154,7 +154,7 @@ public class BDD {
                 return false;
             }
             try {
-                String sql = "UPDATE " + table("Utilisateur") + " set prenom=?, nom=?,email=?," +
+                String sql = "UPDATE " + table("utilisateur") + " set prenom=?, nom=?,email=?," +
                         "pseudo=?,genre=?,anniversaire=?,statut_id=?,pays_id=? where utilisateur_id=? ; ";
 
                 Date dateAnniversaire = null;
@@ -199,7 +199,7 @@ public class BDD {
     {
 
         try {
-            String sql = "UPDATE " + table("Utilisateur") + " set options_id=? where utilisateur_id=? ; ";
+            String sql = "UPDATE " + table("utilisateur") + " set options_id=? where utilisateur_id=? ; ";
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
@@ -243,7 +243,7 @@ public class BDD {
         
         try {
             String SQL = "SELECT * "
-                    + "FROM " + table("Statut")
+                    + "FROM " + table("statut")
                     + "WHERE statut_id = ?";
             
             PreparedStatement pstmt = conn.prepareStatement(SQL);
@@ -272,7 +272,7 @@ public class BDD {
         Utilisateur user = null;
         try {
             String SQL = "SELECT * "
-                    + "FROM " + table("Utilisateur")
+                    + "FROM " + table("utilisateur")
                     + "WHERE utilisateur_id = ?";
             
             PreparedStatement pstmt = conn.prepareStatement(SQL);
@@ -318,7 +318,7 @@ public class BDD {
 
         try {
             Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM " + table("Utilisateur") );
+            ResultSet rs = st.executeQuery("SELECT * FROM " + table("utilisateur") );
 
             
             while (rs.next()) {
@@ -371,7 +371,7 @@ public class BDD {
      * @throws
      */
     private boolean checkUniqueUserWithId(String email, String pseudo, int userId) {
-        String sql = "Select * FROM " + table("Utilisateur") + " WHERE (email=? OR pseudo=?) AND utilisateur_id!=?;";
+        String sql = "Select * FROM " + table("utilisateur") + " WHERE (email=? OR pseudo=?) AND utilisateur_id!=?;";
         try {
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, email);
@@ -404,7 +404,7 @@ public class BDD {
             
             
             String SQL = "INSERT INTO "
-                    + table("Utilisateur")
+                    + table("utilisateur")
                     + "(prenom, nom, email, pseudo, mdp, genre, anniversaire, droit_id, statut_id, pays_id, options_id, solde   ) "
                     + "VALUES "
                     + "('" + prenom +"','"+ nom +"','"+ email +"','"+ pseudo +"','"+ mdp +"',"
@@ -442,7 +442,7 @@ public class BDD {
             //Statement st = conn.createStatement();
             //ResultSet rs = st.executeQuery("SELECT * FROM " + table("Utilisateur") + " WHERE pseudo = ? AND mdp = ?; );
             String SQL = "SELECT * "
-                    + "FROM " + table("Utilisateur")
+                    + "FROM " + table("utilisateur")
                     + "WHERE pseudo = ?;";
 
             PreparedStatement pstmt = conn.prepareStatement(SQL);
@@ -483,7 +483,7 @@ public class BDD {
 
         try {
             Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM " + table("Pays") );
+            ResultSet rs = st.executeQuery("SELECT * FROM " + table("pays") );
 
             while (rs.next()) {
                 // Gère pas encore la couleur a voir !!
@@ -513,7 +513,7 @@ public class BDD {
 
         try {
             Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM " + table("Statut") );
+            ResultSet rs = st.executeQuery("SELECT * FROM " + table("statut") );
 
             while (rs.next()) {
                 // Gère pas encore la couleur a voir !!
@@ -543,7 +543,7 @@ public class BDD {
         
         try {
             Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM " + table("Categorie") );
+            ResultSet rs = st.executeQuery("SELECT * FROM " + table("categorie") );
             
             while (rs.next()) {
                 // Gère pas encore la couleur a voir !!
@@ -570,7 +570,7 @@ public class BDD {
         Categorie categorie = null;
         try {
             String SQL = "SELECT * "
-                    + "FROM " + table("Categorie")
+                    + "FROM " + table("categorie")
                     + " WHERE categorie_id = ?";
 
             PreparedStatement pstmt = conn.prepareStatement(SQL);
@@ -595,7 +595,7 @@ public class BDD {
         Categorie categorie = null;
         try {
             String SQL = "SELECT * "
-                    + "FROM " + table("Categorie")
+                    + "FROM " + table("categorie")
                     + " WHERE nom = ? ";
 
             PreparedStatement pstmt = conn.prepareStatement(SQL);
@@ -626,7 +626,7 @@ public class BDD {
         ArrayList<SousCategorie> listSousCategorie = new ArrayList<>();
         
         try {
-            PreparedStatement st = conn.prepareStatement("SELECT * FROM " + table("Sous_categorie") + " WHERE categorie_id = ?");
+            PreparedStatement st = conn.prepareStatement("SELECT * FROM " + table("sous_categorie") + " WHERE categorie_id = ?");
             st.setInt(1, categorie_id);
             ResultSet rs = st.executeQuery();
             
@@ -716,7 +716,7 @@ public class BDD {
 
 
             String SQL = "INSERT INTO "
-                    + table("Sous_categorie")
+                    + table("sous_categorie")
                     + "(nom, categorie_id) "
                     + "VALUES "
                     + "('" + sousCategorie.nom +"'," + sousCategorie.categorie.id + ");";
@@ -740,7 +740,7 @@ public class BDD {
     public int getSousCategorieID(String sousCategorie){
         try {
             String SQL = "SELECT * "
-                    + "FROM " + table("Sous_categorie")
+                    + "FROM " + table("sous_categorie")
                     + " WHERE nom = ? ";
 
             PreparedStatement pstmt = conn.prepareStatement(SQL);
@@ -768,7 +768,7 @@ public class BDD {
         ArrayList<String> listType_transaction = new ArrayList<>();
 
         try {
-            PreparedStatement st = conn.prepareStatement("SELECT * FROM " + table("Type_transaction"));
+            PreparedStatement st = conn.prepareStatement("SELECT * FROM " + table("type_transaction"));
             ResultSet rs = st.executeQuery();
 
             while (rs.next())
@@ -786,7 +786,7 @@ public class BDD {
     }
 
     public ArrayList<Integer> getSousCategorieMonthly(int userID, int sousCatID) {
-        String SQL = "SELECT SUM(Transaction.valeur) as Somme FROM " + table("Utilisateur") +
+        String SQL = "SELECT SUM(Transaction.valeur) as Somme FROM " + table("utilisateur") +
                 "INNER JOIN " + table("Modele_transaction") + "ON Modele_transaction.utilisateur_id = Utilisateur.id " +
                 "INNER JOIN " + table("Transaction") + "ON Modele_transaction.modele_transaction_id = Transaction.modele_transaction_id " +
                 "WHERE Utilisateur.id = ? AND Modele_transaction.sous_categorie_id = ? " + "GROUP BY MONTH(Transaction.date);";
@@ -824,7 +824,7 @@ public class BDD {
      * @return                  retoure 0 s'il n'y a pas eu de probleme, -1 autrement
      */
     public int addIncome(int userID, int valeur, String sousCategorie, String recurrence, String note){
-        String SQL = "INSERT INTO " + table("Modele_transaction") + "(valeur, date, note, utilisateur_id, sous_categorie_id, type_transaction_id, recurrence_id) " +
+        String SQL = "INSERT INTO " + table("modele_transaction") + "(valeur, date, note, utilisateur_id, sous_categorie_id, type_transaction_id, recurrence_id) " +
                         "VALUES (?, NOW(),?, ?, ?, ?, ?);";
 
         try{
@@ -862,7 +862,7 @@ public class BDD {
      * @return                  retoure 0 s'il n'y a pas eu de probleme, -1 autrement
      */
     public int addExpense(int userID, int valeur, String sousCategorie, String recurrence, String note){
-        String SQL = "INSERT INTO " + table("Modele_transaction") + "(valeur, date, note, utilisateur_id, sous_categorie_id, type_transaction_id, recurrence_id) " +
+        String SQL = "INSERT INTO " + table("modele_transaction") + "(valeur, date, note, utilisateur_id, sous_categorie_id, type_transaction_id, recurrence_id) " +
                 "VALUES (?, NOW(),?, ?, ?, ?, ?);";
 
         try{
@@ -888,10 +888,50 @@ public class BDD {
         }
     }
 
+    /**
+     * Permet d'ajouter une depense
+     *
+     * @param userID            ID de l'utilisateur
+     * @param valeur            valeur de le depense
+     * @param idSousCategorie   id de sous categorie
+     * @param recurrenceId      id de la recurrence du payement
+     * @param note              note de l'utilisateur concernant le payement
+     * @param idTypeTrans       id de du type de transaction
+     * @return                  retoure 0 s'il n'y a pas eu de probleme, -1 autrement
+     */
+    public int addMovement(int userID, double valeur, int idSousCategorie, int recurrenceId, String note, int idTypeTrans){
+        String SQL = "INSERT INTO " + table("modele_transaction") + "(valeur, date, note, utilisateur_id, sous_categorie_id, type_transaction_id, recurrence_id) " +
+                "VALUES ("+ valeur +", NOW(),?, ?, ?, ?, ?);";
+
+        try{
+            PreparedStatement pstmt = conn.prepareStatement(SQL);
+
+            //pstmt.setBigDecimal(1, valeur);
+            pstmt.setString(1, note);
+            pstmt.setInt(2, userID);
+            pstmt.setInt(3, idSousCategorie);
+            pstmt.setInt(4, idTypeTrans);
+            if(recurrenceId == 0){
+                pstmt.setNull(5, Types.INTEGER);
+            }else{
+                pstmt.setInt(5, recurrenceId);
+            }
+
+            pstmt.executeUpdate();
+            return 0;
+        }
+        catch(SQLException ex){
+            Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+            return -1;
+        }
+    }
+
+
+
     public ArrayList<Categorie> getAllCategories() {
         ArrayList<Categorie> categories = new ArrayList<Categorie>();
         try {
-            String SQL = "SELECT categorie_id " + "FROM " + table("Categorie");
+            String SQL = "SELECT categorie_id " + "FROM " + table("categorie");
 
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(SQL);
@@ -912,7 +952,7 @@ public class BDD {
                 "INNER JOIN " + table("Modele_transaction") + "ON Modele_transaction.utilisateur_id = Utilisateur.id " +
                 "INNER JOIN " + table("Transaction") + "ON Modele_transaction.modele_transaction_id = Transaction.modele_transaction_id " +
                 "WHERE Utilisateur.id = ? AND Modele_transaction.sous_categorie_id = ? " + "GROUP BY MONTH(Transaction.date)";
-=======
+
 */
     /**
      * Renvoie les 10 dernieres depenses toutes categories confondues
@@ -922,7 +962,7 @@ public class BDD {
      * @return              retourne une liste contenant les 10 dernieres transactions de la sous categorie
      */
     public ArrayList<Integer> getTenLastSousCategorie(int userID, int sousCatID) {
-        String SQL = "SELECT Transaction.valeur, Modele_transaction.type_transaction_id, Transaction.date FROM " + table("Modele_transaction")
+        String SQL = "SELECT Transaction.valeur, Modele_transaction.type_transaction_id, Transaction.date FROM " + table("modele_transaction")
                         + " INNER JOIN " + table("Transaction") + " ON Modele_transaction.modele_transaction_id = Transaction.modele_transaction_id"
                         + " WHERE Modele_transaction.utilisateur_id = ? AND Modele_transaction.sous_categorie_id = ?"
                         + " ORDER BY Transaction.date DESC LIMIT 10;";
@@ -949,7 +989,7 @@ public class BDD {
 
     private int getRecIdByName(String recurrence)
     {
-        String sql = "SELECT recurence_id FROM " + table("Recurence") + " WHERE periodicite = ?;";
+        String sql = "SELECT recurence_id FROM " + table("recurence") + " WHERE periodicite = ?;";
         int result = 0;
         try{
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -970,7 +1010,7 @@ public class BDD {
 
     public double getSoldeById(int userId)
     {
-        String sql = "SELECT solde FROM " + table("Utilisateur") + " WHERE utilisateur_id = ?;";
+        String sql = "SELECT solde FROM " + table("utilisateur") + " WHERE utilisateur_id = ?;";
         double result = 0;
         try{
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -1027,7 +1067,7 @@ public class BDD {
      */
     public ArrayList<Recurrence> getRecurrence()
     {
-        String sql = "SELECT * FROM " + table("Recurence") + ";";
+        String sql = "SELECT * FROM " + table("recurence") + ";";
         ArrayList<Recurrence> recs = new ArrayList<>();
         try{
             PreparedStatement pstmt = conn.prepareStatement(sql);
