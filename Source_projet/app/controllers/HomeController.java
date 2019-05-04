@@ -398,6 +398,7 @@ public class HomeController extends Controller {
         int userId = user.getId();
         int recId = Integer.parseInt(form.get("recurrence"));
 
+
         int result = DB.addMovement(userId,amount,idSubCat,recId,"",id_trans);
 
         return redirect("/");
