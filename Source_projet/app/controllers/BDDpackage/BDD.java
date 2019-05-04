@@ -1154,10 +1154,11 @@ public class BDD {
     public ArrayList<Transaction> getAllTransaction(int userId)
     {
 
-        String SQL = "Select public.transaction.transaction_id, public.transaction.valeur," +
+        String SQL = "Select public.transaction.transaction_id, public.sous_categorie.nom, public.transaction.valeur," +
                 "public.transaction.date, public.modele_transaction.recurrence_id  FROM " + table("transaction") + " INNER JOIN " + table("modele_transaction")
                 + " ON " + table("transaction") + ".modele_transaction_id = " + table("modele_transaction") +
-                ".modele_transaction_id" + " WHERE " + table("modele_transaction") + ".utilisateur_id = ? ORDER BY + " +
+                ".modele_transaction_id" + " INNER JOIN "+ table("sous_categorie")+ " ON " + table("modele_transaction")
+                +".sous_categorie_id = " +table("sous_categorie") + ".sous_categorie_id  WHERE " + table("modele_transaction") + ".utilisateur_id = ? ORDER BY + " +
                 table("transaction") + ".transaction_id DESC;";
 
         ArrayList<Transaction> trans = new ArrayList<>();
@@ -1170,7 +1171,7 @@ public class BDD {
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
-                trans.add(new Transaction(rs.getInt(1),rs.getDouble(2),rs.getString(3),rs.getInt(4)));
+                trans.add(new Transaction(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getString(4),rs.getInt(5)));
             }
         }
         catch(SQLException ex){

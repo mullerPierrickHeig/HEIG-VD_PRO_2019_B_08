@@ -21,7 +21,7 @@
                     <tbody>
                         @for(trans <- (HomeController.DB).getAllTransaction(user.getId())){
                             <tr>
-                                <th scope="row">@trans.id</th>
+                                <th scope="row">@trans.name</th>
                                 <td>@trans.date</td>
                                 @if(trans.idRecurrence == 1){
                                     <td style="color:#53a93f">@trans.valeur</td>
