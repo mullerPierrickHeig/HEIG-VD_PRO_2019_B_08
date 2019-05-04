@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.Types;
+import java.sql.CallableStatement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -135,7 +136,7 @@ public class BDD {
     }
 
     /**
-     * Permet de mettre à jour le profil d'un utilisateur, sans le mot de passe ou les options
+     * Permet de mettre à jour le profil d'un utilisateur, sans le mot de passe, les options ou le solde
      * @param userId ID de l'utilisateur à modifier
      * @param prenom prénom de l'utilisateur
      * @param nom nom de l'utilisateur
@@ -292,7 +293,8 @@ public class BDD {
                         rs.getString("droit_id"),
                         statutString(rs.getInt("statut_id")),
                         paysString(rs.getInt("pays_id")),
-                        optionsString(rs.getInt("options_id")) );
+                        optionsString(rs.getInt("options_id")),
+                        rs.getDouble("solde"));
                 
             }
         } catch (SQLException ex) {
@@ -1097,6 +1099,21 @@ public class BDD {
 
     }
 
+    public void updateSousCatPerso(int id_sous_cat, int id_user){
+        String SQL  = "CALL add_sous_cat_perso(?, ?)";
+
+        try{
+            CallableStatement cs = conn.prepareCall(SQL);
+
+            cs.setInt(1, id_sous_cat);
+            cs.setInt(2, id_user);
+
+            cs.execute();
+        }
+        catch(SQLException ex){
+            Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     /**
      * @param args the command line arguments

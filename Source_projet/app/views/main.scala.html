@@ -53,6 +53,39 @@
     </head>
 
     <body>
+        <!-- -->
+
+        <script type="text/javascript">
+            function visualiseExpense(){
+                //text base
+                var textAmount = "Expense entered :";
+                var textFinalSolde = "New balance     :";
+
+                //recuperation Amount
+                var tmpAmount = document.getElementById("amountId").value;
+
+                //Calcul solde après mouvement
+                var finalSolde = @user.getSolde() - tmpAmount;
+
+                //Création des affichages
+                textAmount = textAmount.concat(tmpAmount);
+                textFinalSolde = textFinalSolde.concat(finalSolde);
+
+                //affichage
+                document.getElementById("amountVisualize").innerHTML = textAmount;
+                document.getElementById("afterSolde").innerHTML = textFinalSolde;
+
+
+            }
+
+
+            function sendVisualize()
+            {
+                closeNav();
+                document.forms["form-add-expense"].submit();
+                //document.getElementsByName("form-add-expense").submit();
+            }
+        </script>
         <!-- Ajouter at + decommenter pour gestion bouton add user -->
         <!-- if( user.getId() != 0){ -->
         <script type = "text/javascript">
@@ -61,13 +94,14 @@
                     document.getElementById("mySidenav").style.width = "50%";
                     document.getElementById("mySidenav").style.boxShadow = "0 0 0 10000px rgba(0,0,0,.50)";
                     document.getElementById("logo-img").style.pointerEvents = "none";
+                    displaySousCatSel();
                 }
 
                 /* Set the width of the side navigation to 0 and the left margin of the page content to 0, and the background color of body to white */
                 function closeNav() {
                     document.getElementById("mySidenav").style.width = "0";
                     document.getElementById("mySidenav").style.boxShadow = "0 0 0 0px rgba(0,0,0,0)";
-                    document.getElementById("logo-img").style.pointerEvents = "href=\"http://localhost:9000\"";
+                    document.getElementById("logo-img").style.pointerEvents = "auto";
                 }
         </script>
 
@@ -86,7 +120,6 @@
                 document.getElementById("subCat12").style.display = "none";
                 document.getElementById("subCat13").style.display = "none";
                 document.getElementById("subCat16").style.display = "none";
-
             }
         </script>
 
@@ -94,7 +127,7 @@
                 function displaySousCatSel() {
                     var e = document.getElementById("catSel");
                     var f = e.options[e.selectedIndex].value;
-                    if(f == 9) {
+                    if(f == 9 || f == 0) {
                         hideAnySubcat();
                     } else {
                         var i = 0;
@@ -150,7 +183,18 @@
         </script>
 
         <script type = "text/javascript">
-                function getCatId() {
+                function validateFormExpense() {
+                    var x = document.forms["form-add-expense"]["categorie"].value;
+                    if (x == "0" || x == 0) {
+                        alert("Choose a categorie");
+                        return false;
+                    }
+                    x = document.forms["form-add-expense"]["categorie"].value;
+                    if (x == "0" || x == 0) {
+                        alert("Choose a categorie");
+                        return false;
+                    }
+                    x = document.forms["form-add-expense"]["categorie"].value;
                 }
         </script>
 
@@ -176,17 +220,17 @@
                         <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
                             <div class="card-body sidebar-menu-text">
 
-                            @helper.form(action = helper.CSRF(routes.HomeController.AddExpense())) {
+                            @helper.form(action = helper.CSRF(routes.HomeController.AddExpense()),'name -> "form-add-expense" ,'onsubmit -> "return validateFormExpense();") {
 
                                 <form>
                                     <div class="form-group">
                                         <label>Amount</label>
-                                        <input type="number" name="amount" step=0.01 value="0" min="0" max="100000000" class="form-control"  placeholder="">
+                                        <input type="number" name="amount" id="amountId" step=0.05 value="0" min="0" max="100000000" class="form-control"  placeholder="">
                                     </div> <!-- form-group end.// -->
                                     <div class="form-group">
                                         <label>Categorie</label>
                                         <select  id="catSel" name="categorie" class="form-control" onchange="displaySousCatSel();">
-                                            <option name="0" selected>Choose...</option>
+                                            <option value="0" selected>Choose...</option>
                                         @for(cat <- (HomeController.DB).getAllCategories()) {
                                             <option value="@cat.id">@cat.nom</option>
                                         }
@@ -385,6 +429,7 @@
                                     <div id="recurrence" class="hidden-categorie">
                                         <div class="form-group">
                                             <select name="recurrence" class="form-control">
+                                                <option value ="0">choose...</option>
                                                 @for(rec <- (HomeController.DB).getRecurrence()){
                                                     <option value="@rec.getId()">@rec.getName()</option>
                                                 }
@@ -393,7 +438,7 @@
                                         </div> <!-- form-group end.// -->
                                     </div>
                                     <button type="submit" class="btn btn-primary btn-block"> Add </button>
-                                    <button type="button" data-toggle="modal" class="btn btn-secondary btn-block" data-target="#visualization"> Visualize </button>
+                                    <button type="button" data-toggle="modal" onclick="visualiseExpense();" class="btn btn-secondary btn-block" data-target="#visualization"> Visualize </button>
 
                                         <!-- Modal -->
                                     <div class="modal fade" id="visualization" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -408,14 +453,14 @@
                                                 </div>
                                                 <form action="" method="get">
                                                     <div class="modal-body">
-                                                        <div><a>Base balance    :</a></div>
-                                                        <div><a>Expense entered :</a></div>
+                                                        <div><a>Base balance    : @user.getSolde()</a></div>
+                                                        <div><a id="amountVisualize"></a></div>
                                                         <br>
-                                                        <div><a>New balance     :</a></div>
+                                                        <div><a id="afterSolde"></a></div>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                        <button type="submit" value="submit" class="btn btn-primary">Confirm changes</button>
+                                                        <button type="button" onclick="sendVisualize();" class="btn btn-primary">Confirm changes</button>
                                                     </div>
                                                 </form>
                                             </div>
