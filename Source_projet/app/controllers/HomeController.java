@@ -154,7 +154,7 @@ public class HomeController extends Controller {
         statut = DB.get_Statut();
         if(idResult != 0) {
             user = DB.UtilisateurByID(idResult);
-            return ok( views.html.utilisateur.render( user,0,"",pays,statut) );
+            return ok( views.html.utilisateur.render( user,0,"") );
         }
         else if(!error)
         {
@@ -190,15 +190,8 @@ public class HomeController extends Controller {
         }
         else
         {
-            //Recuperation pays pour affichage
-            ArrayList<Pays> pays = new ArrayList<Pays>();
-            pays = DB.get_Pays();
 
-            //Recuperation statut pour affichage
-            ArrayList<Statut> statut = new ArrayList<Statut>();
-            statut = DB.get_Statut();
-
-            return ok( views.html.utilisateur.render( user,0,"",pays,statut) );
+            return ok( views.html.utilisateur.render( user,0,"") );
         }
 
     }
@@ -271,15 +264,8 @@ public class HomeController extends Controller {
             message = "Error: insertion failed !";
         }
 
-        //Recuperation pays pour affichage
-        ArrayList<Pays> pays = new ArrayList<Pays>();
-        pays = DB.get_Pays();
-
-        //Recuperation statut pour affichage
-        ArrayList<Statut> statut = new ArrayList<Statut>();
-        statut = DB.get_Statut();
         // Retour a la page souhaitée (profil)
-        return ok( views.html.utilisateur.render( DB.UtilisateurByID( user.getId() ),alerte,message,pays,statut) );
+        return ok( views.html.utilisateur.render( DB.UtilisateurByID( user.getId() ),alerte,message) );
     }
 
     // Gestion des options
@@ -324,14 +310,6 @@ public class HomeController extends Controller {
         } else {
             DynamicForm form = formFactory.form().bindFromRequest();
 
-            //Recuperation pays pour affichage
-            ArrayList<Pays> pays = new ArrayList<Pays>();
-            pays = DB.get_Pays();
-
-            //Recuperation statut pour affichage
-            ArrayList<Statut> statut = new ArrayList<Statut>();
-            statut = DB.get_Statut();
-
             //Gestion erreur
             boolean error = false;
             String erreurMes = "Erreur lors de la modification du profil, veuillez réessayer.";
@@ -356,11 +334,11 @@ public class HomeController extends Controller {
                 else
                 {
 
-                    return ok( views.html.utilisateur.render( user,1,erreurMes,pays,statut));
+                    return ok( views.html.utilisateur.render( user,1,erreurMes));
                 }
             }
 
-            return ok( views.html.utilisateur.render( user,1,erreurMes,pays,statut));
+            return ok( views.html.utilisateur.render( user,1,erreurMes));
         }
     }
 
