@@ -142,7 +142,6 @@
                                 var str2 = "subCat";
                                 var str3 = str2.concat(str);
                                 document.getElementById(str3).style.display = "inline";
-
                             }
                         }
                     }
@@ -170,7 +169,6 @@
                     } else {
                         document.getElementById("subCat-income").style.display = "inline";
                     }
-
                 }
         </script>
 
@@ -201,6 +199,10 @@
                     x = document.forms["form-add-expense"]["categorie"].value;
                     return true;
                 }
+        </script>
+
+        <script type = "text/javascript">
+
         </script>
 
 
@@ -246,8 +248,7 @@
                                     <div id="subCat1" class="hidden-categorie">
                                         <div class="form-group">
                                             <label>Subcategorie</label>
-                                            <select name="sous-categorie_1" class="form-control">
-
+                                            <select id="subCatExpense" name="sous-categorie_1" class="form-control">
                                                 <option value="0" selected>Choose...</option>
 
                                             @for(sousCat <- (HomeController.DB).get_Sous_categorie(1)){
@@ -451,10 +452,14 @@
                                             </select>
                                         </div> <!-- form-group end.// -->
                                     </div>
-
-
                                         <!-- END ALL SUBCATEGORIES FOR ADD EXPENSE-->
 
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" style="background:  #8c8c8c" style="padding-right: 20px">Note</span>
+                                        </div>
+                                        <textarea class="form-control" aria-label="With textarea"></textarea>
+                                    </div>
 
                                     <input id="chk1" type="checkbox" data-toggle="toggle" onclick="displayRecurrence()">
                                     <label for="check1">Recurrence</label>
@@ -469,7 +474,7 @@
                                             </select>
                                         </div> <!-- form-group end.// -->
                                     </div>
-                                    <button type="submit" class="btn btn-primary btn-block"> Add </button>
+                                    <button type="submit" class="btn btn-primary btn-block">Add</button>
                                     <button type="button" data-toggle="modal" onclick="visualiseExpense();" class="btn btn-secondary btn-block" data-target="#visualization"> Visualize </button>
 
                                         <!-- Modal -->
@@ -490,6 +495,7 @@
                                                         <br>
                                                         <div><a id="afterSolde"></a></div>
                                                     </div>
+
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                                         <button type="button" onclick="sendVisualize();" class="btn btn-primary">Confirm changes</button>
@@ -498,7 +504,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                 </form>
                             }
                             </div>
@@ -537,7 +542,7 @@
                                             <select name="sous-categorie" class="form-control">
                                                 @for(sousCat <- (HomeController.DB).get_Sous_categorie(1)){
                                                     <option value ="@sousCat.id">@sousCat.nom</option>
-                                                }
+                                                }}
                                             </select>
                                         </div> <!-- form-group end.// -->
                                     </div>
@@ -552,7 +557,6 @@
                                     </div>
                                     <button type="submit" class="btn btn-primary btn-block"> Add </button>
                                 </form>
-                            }
                             </div>
                         </div>
                     </div>
