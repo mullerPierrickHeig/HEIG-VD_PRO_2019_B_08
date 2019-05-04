@@ -44,26 +44,10 @@ public class HomeController extends Controller {
      * this method will be called when the application receives a
      * <code>GET</code> request with a path of <code>/</code>.
      */
+    // Page d'accueil
     public Result index()  throws SQLException {
 
-        //DB.display_Categories();
-
-        //DB.display_Sous_categorie(2);
-
-        //DB.UtilisateurByID(1);
         return ok(views.html.index.render("Compact Budget",user));
-    }
-
-    public Result test() {
-
-        return ok(views.html.index.render("test",user));
-    }
-
-    // Exemple pour passer un paramètre de HTML -> Java (via URL)
-    // Fichier à toucher : HomeController + routes + views
-    public Result testParam(String name) {
-
-        return ok(views.html.index.render(name,user));
     }
 
     // Gestion du login
@@ -170,7 +154,7 @@ public class HomeController extends Controller {
         statut = DB.get_Statut();
         if(idResult != 0) {
             user = DB.UtilisateurByID(idResult);
-            return ok( views.html.utilisateur.render( user,0,"",pays,statut) );
+            return ok( views.html.utilisateur.render( user,0,"") );
         }
         else if(!error)
         {
@@ -206,15 +190,8 @@ public class HomeController extends Controller {
         }
         else
         {
-            //Recuperation pays pour affichage
-            ArrayList<Pays> pays = new ArrayList<Pays>();
-            pays = DB.get_Pays();
 
-            //Recuperation statut pour affichage
-            ArrayList<Statut> statut = new ArrayList<Statut>();
-            statut = DB.get_Statut();
-
-            return ok( views.html.utilisateur.render( user,0,"",pays,statut) );
+            return ok( views.html.utilisateur.render( user,0,"") );
         }
 
     }
@@ -287,15 +264,8 @@ public class HomeController extends Controller {
             message = "Error: insertion failed !";
         }
 
-        //Recuperation pays pour affichage
-        ArrayList<Pays> pays = new ArrayList<Pays>();
-        pays = DB.get_Pays();
-
-        //Recuperation statut pour affichage
-        ArrayList<Statut> statut = new ArrayList<Statut>();
-        statut = DB.get_Statut();
         // Retour a la page souhaitée (profil)
-        return ok( views.html.utilisateur.render( DB.UtilisateurByID( user.getId() ),alerte,message,pays,statut) );
+        return ok( views.html.utilisateur.render( DB.UtilisateurByID( user.getId() ),alerte,message) );
     }
 
     // Gestion des options
@@ -340,14 +310,6 @@ public class HomeController extends Controller {
         } else {
             DynamicForm form = formFactory.form().bindFromRequest();
 
-            //Recuperation pays pour affichage
-            ArrayList<Pays> pays = new ArrayList<Pays>();
-            pays = DB.get_Pays();
-
-            //Recuperation statut pour affichage
-            ArrayList<Statut> statut = new ArrayList<Statut>();
-            statut = DB.get_Statut();
-
             //Gestion erreur
             boolean error = false;
             String erreurMes = "Erreur lors de la modification du profil, veuillez réessayer.";
@@ -372,11 +334,11 @@ public class HomeController extends Controller {
                 else
                 {
 
-                    return ok( views.html.utilisateur.render( user,1,erreurMes,pays,statut));
+                    return ok( views.html.utilisateur.render( user,1,erreurMes));
                 }
             }
 
-            return ok( views.html.utilisateur.render( user,1,erreurMes,pays,statut));
+            return ok( views.html.utilisateur.render( user,1,erreurMes));
         }
     }
 
@@ -421,7 +383,7 @@ public class HomeController extends Controller {
 
         int userId = user.getId();
         int recId = Integer.parseInt(form.get("recurrence"));
-
+        String note = form.get("note");
 
         int result = DB.addMovement(userId,amount,idSubCat,recId,"",id_trans);
         user = DB.UtilisateurByID(userId);
@@ -429,4 +391,12 @@ public class HomeController extends Controller {
 
     }
 
+    public Result Historique()
+    {
+        if(user.getId() == 0)
+        {
+            return redirect("/profil");
+        }
+        return ok(views.html.historique.render("Historique",user));
+    }
 }
