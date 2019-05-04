@@ -250,9 +250,13 @@
                                             <label>Subcategorie</label>
                                             <select id="subCatExpense" name="sous-categorie_1" class="form-control">
                                                 <option value="0" selected>Choose...</option>
-                                                @for(sousCat <- (HomeController.DB).get_Sous_categorie(1)){
+
+                                            @for(sousCat <- (HomeController.DB).get_Sous_categorie(1)){
+                                                @if(sousCat.is_global || (HomeController.DB).belongToUser(sousCat.id, user.getId() ) ) {
                                                     <option value ="@sousCat.id">@sousCat.nom</option>
                                                 }
+
+                                            }
                                             </select>
                                         </div> <!-- form-group end.// -->
                                     </div>
@@ -265,7 +269,9 @@
                                                 <option value="0" selected>Choose...</option>
 
                                             @for(sousCat <- (HomeController.DB).get_Sous_categorie(2)){
-                                                <option value ="@sousCat.id">@sousCat.nom</option>
+                                                @if(sousCat.is_global || (HomeController.DB).belongToUser(sousCat.id, user.getId() ) ) {
+                                                    <option value ="@sousCat.id">@sousCat.nom</option>
+                                                }
                                             }
                                             </select>
                                         </div> <!-- form-group end.// -->
@@ -279,7 +285,9 @@
                                                 <option value="0" selected>Choose...</option>
 
                                             @for(sousCat <- (HomeController.DB).get_Sous_categorie(3)){
-                                                <option value ="@sousCat.id">@sousCat.nom</option>
+                                                @if(sousCat.is_global || (HomeController.DB).belongToUser(sousCat.id, user.getId() ) ) {
+                                                    <option value ="@sousCat.id">@sousCat.nom</option>
+                                                }
                                             }
                                             </select>
                                         </div> <!-- form-group end.// -->
@@ -293,7 +301,9 @@
                                                 <option value="0" selected>Choose...</option>
 
                                             @for(sousCat <- (HomeController.DB).get_Sous_categorie(4)){
-                                                <option value ="@sousCat.id">@sousCat.nom</option>
+                                                @if(sousCat.is_global || (HomeController.DB).belongToUser(sousCat.id, user.getId() ) ) {
+                                                    <option value ="@sousCat.id">@sousCat.nom</option>
+                                                }
                                             }
                                             </select>
                                         </div> <!-- form-group end.// -->
@@ -307,7 +317,9 @@
                                                 <option value="0" selected>Choose...</option>
 
                                             @for(sousCat <- (HomeController.DB).get_Sous_categorie(5)){
-                                                <option value ="@sousCat.id">@sousCat.nom</option>
+                                                @if(sousCat.is_global || (HomeController.DB).belongToUser(sousCat.id, user.getId() ) ) {
+                                                    <option value ="@sousCat.id">@sousCat.nom</option>
+                                                }
                                             }
                                             </select>
                                         </div> <!-- form-group end.// -->
@@ -321,7 +333,9 @@
                                                 <option value="0" selected>Choose...</option>
 
                                             @for(sousCat <- (HomeController.DB).get_Sous_categorie(6)){
-                                                <option value ="@sousCat.id">@sousCat.nom</option>
+                                                @if(sousCat.is_global || (HomeController.DB).belongToUser(sousCat.id, user.getId() ) ) {
+                                                    <option value ="@sousCat.id">@sousCat.nom</option>
+                                                }
                                             }
                                             </select>
                                         </div> <!-- form-group end.// -->
@@ -335,7 +349,9 @@
                                                 <option value="0" selected>Choose...</option>
 
                                             @for(sousCat <- (HomeController.DB).get_Sous_categorie(7)){
-                                                <option value ="@sousCat.id">@sousCat.nom</option>
+                                                @if(sousCat.is_global || (HomeController.DB).belongToUser(sousCat.id, user.getId() ) ) {
+                                                    <option value ="@sousCat.id">@sousCat.nom</option>
+                                                }
                                             }
                                             </select>
                                         </div> <!-- form-group end.// -->
@@ -349,7 +365,9 @@
                                                 <option value="0" selected>Choose...</option>
 
                                             @for(sousCat <- (HomeController.DB).get_Sous_categorie(8)){
-                                                <option value ="@sousCat.id">@sousCat.nom</option>
+                                                @if(sousCat.is_global || (HomeController.DB).belongToUser(sousCat.id, user.getId() ) ) {
+                                                    <option value ="@sousCat.id">@sousCat.nom</option>
+                                                }
                                             }
                                             </select>
                                         </div> <!-- form-group end.// -->
@@ -363,7 +381,9 @@
                                                 <option value="0" selected>Choose...</option>
 
                                             @for(sousCat <- (HomeController.DB).get_Sous_categorie(10)){
-                                                <option value ="@sousCat.id">@sousCat.nom</option>
+                                                @if(sousCat.is_global || (HomeController.DB).belongToUser(sousCat.id, user.getId() ) ) {
+                                                    <option value ="@sousCat.id">@sousCat.nom</option>
+                                                }
                                             }
                                             </select>
                                         </div> <!-- form-group end.// -->
@@ -377,7 +397,9 @@
                                                 <option value="0" selected>Choose...</option>
 
                                             @for(sousCat <- (HomeController.DB).get_Sous_categorie(11)){
-                                                <option value ="@sousCat.id">@sousCat.nom</option>
+                                                @if(sousCat.is_global || (HomeController.DB).belongToUser(sousCat.id, user.getId() ) ) {
+                                                    <option value ="@sousCat.id">@sousCat.nom</option>
+                                                }
                                             }
                                             </select>
                                         </div> <!-- form-group end.// -->
@@ -391,7 +413,9 @@
                                                 <option value="0" selected>Choose...</option>
 
                                             @for(sousCat <- (HomeController.DB).get_Sous_categorie(12)){
-                                                <option value ="@sousCat.id">@sousCat.nom</option>
+                                                @if(sousCat.is_global || (HomeController.DB).belongToUser(sousCat.id, user.getId() ) ) {
+                                                    <option value ="@sousCat.id">@sousCat.nom</option>
+                                                }
                                             }
                                             </select>
                                         </div> <!-- form-group end.// -->
@@ -405,7 +429,9 @@
                                                 <option value="0" selected>Choose...</option>
 
                                             @for(sousCat <- (HomeController.DB).get_Sous_categorie(13)){
-                                                <option value ="@sousCat.id">@sousCat.nom</option>
+                                                @if(sousCat.is_global || (HomeController.DB).belongToUser(sousCat.id, user.getId() ) ) {
+                                                    <option value ="@sousCat.id">@sousCat.nom</option>
+                                                }
                                             }
                                             </select>
                                         </div> <!-- form-group end.// -->
@@ -419,7 +445,9 @@
                                                 <option value="0" selected>Choose...</option>
 
                                             @for(sousCat <- (HomeController.DB).get_Sous_categorie(16)){
-                                                <option value ="@sousCat.id">@sousCat.nom</option>
+                                                @if(sousCat.is_global || (HomeController.DB).belongToUser(sousCat.id, user.getId() ) ) {
+                                                    <option value ="@sousCat.id">@sousCat.nom</option>
+                                                }
                                             }
                                             </select>
                                         </div> <!-- form-group end.// -->

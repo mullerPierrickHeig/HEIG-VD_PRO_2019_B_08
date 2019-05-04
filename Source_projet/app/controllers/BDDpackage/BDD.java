@@ -635,7 +635,7 @@ public class BDD {
             while (rs.next())
             {
                 Categorie categorie = CategorieByID(rs.getInt( "categorie_id" ));
-                SousCategorie sousCat = new SousCategorie(rs.getInt(1),rs.getString("nom"),categorie);
+                SousCategorie sousCat = new SousCategorie(rs.getInt(1),rs.getString("nom"),categorie,rs.getBoolean("is_global") );
                 listSousCategorie.add(sousCat);
             }
             
@@ -733,12 +733,8 @@ public class BDD {
                 idSousCat = rs.getInt(1);
 
                 ok = true;
+                updateSousCatPerso(idSousCat, idUser);
             }
-            Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, "test2: " + idUser, "test3: " + idUser);
-            updateSousCatPerso(idSousCat, idUser);
-
-            //st.executeUpdate(SQL);
-            //ok = true;
 
         } catch (SQLException ex) {
             Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
@@ -1105,16 +1101,43 @@ public class BDD {
         try{
             CallableStatement cs = conn.prepareCall(SQL);
 
-            Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, "id user2 :" + id_user, "id user :" + id_user );
+            //Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, "id user :" + id_user, "" );
 
             cs.setInt(1, id_user);
             cs.setInt(2, id_sous_cat);
-            
+
             cs.execute();
         }
         catch(SQLException ex){
             Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    /**
+     * Get Sous_categorie by
+     *
+     * @param
+     * @throws SQLException
+     */
+    public boolean belongToUser(int sousCat_id, int user_id) {
+
+        boolean IsYours = false;
+
+        try {
+            PreparedStatement st = conn.prepareStatement("SELECT * FROM " + table("sous_categories_personnelles") + " WHERE sous_categorie_id = ? AND utilisateur_id = ?");
+            st.setInt(1, sousCat_id);
+            st.setInt(2, user_id);
+            ResultSet rs = st.executeQuery();
+
+            IsYours = rs.next();
+
+            rs.close();
+            st.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return IsYours;
     }
 
     /**
