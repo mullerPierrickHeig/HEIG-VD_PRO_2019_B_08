@@ -95,7 +95,7 @@
                 function displaySousCatSel() {
                     var e = document.getElementById("catSel");
                     var f = e.options[e.selectedIndex].value;
-                    if(f == 9) {
+                    if(f == 9 || f == 0) {
                         hideAnySubcat();
                     } else {
                         /*
@@ -162,7 +162,6 @@
                             hideAnySubcat();
                             document.getElementById("subCat16").style.display = "inline";
                         }
-
                     }
                 }
         </script>
@@ -205,12 +204,18 @@
         </script>
 
         <script type = "text/javascript">
-                function validateForm() {
-                    var x = document.forms["myForm"]["fname"].value;
-                    if (x == "") {
-                        alert("Name must be filled out");
+                function validateFormExpense() {
+                    var x = document.forms["form-add-expense"]["categorie"].value;
+                    if (x == "0" || x == 0) {
+                        alert("Choose a categorie");
                         return false;
                     }
+                    x = document.forms["form-add-expense"]["categorie"].value;
+                    if (x == "0" || x == 0) {
+                        alert("Choose a categorie");
+                        return false;
+                    }
+                    x = document.forms["form-add-expense"]["categorie"].value;
                 }
         </script>
 
@@ -236,7 +241,7 @@
                         <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
                             <div class="card-body sidebar-menu-text">
 
-                            @helper.form(action = helper.CSRF(routes.HomeController.AddExpense())) {
+                            @helper.form(action = helper.CSRF(routes.HomeController.AddExpense()),'name -> "form-add-expense" ,'onsubmit -> "return validateFormExpense();") {
 
                                 <form>
                                     <div class="form-group">
@@ -246,7 +251,7 @@
                                     <div class="form-group">
                                         <label>Categorie</label>
                                         <select  id="catSel" name="categorie" class="form-control" onchange="displaySousCatSel();">
-                                            <option name="0" selected>Choose...</option>
+                                            <option value="0" selected>Choose...</option>
                                         @for(cat <- (HomeController.DB).getAllCategories()) {
                                             <option value="@cat.id">@cat.nom</option>
                                         }
@@ -259,7 +264,7 @@
                                             <label>Subcategorie</label>
                                             <select name="sous-categorie_1" class="form-control">
 
-                                                <option name="0" selected>Choose...</option>
+                                                <option value="0" selected>Choose...</option>
 
                                             @for(sousCat <- (HomeController.DB).get_Sous_categorie(1)){
                                                 <option value ="@sousCat.id">@sousCat.nom</option>
@@ -273,7 +278,7 @@
                                             <label>Subcategorie</label>
                                             <select name="sous-categorie_2" class="form-control">
 
-                                                <option name="0" selected>Choose...</option>
+                                                <option value="0" selected>Choose...</option>
 
                                             @for(sousCat <- (HomeController.DB).get_Sous_categorie(2)){
                                                 <option value ="@sousCat.id">@sousCat.nom</option>
@@ -287,7 +292,7 @@
                                             <label>Subcategorie</label>
                                             <select name="sous-categorie_3" class="form-control">
 
-                                                <option name="0" selected>Choose...</option>
+                                                <option value="0" selected>Choose...</option>
 
                                             @for(sousCat <- (HomeController.DB).get_Sous_categorie(3)){
                                                 <option value ="@sousCat.id">@sousCat.nom</option>
@@ -301,7 +306,7 @@
                                             <label>Subcategorie</label>
                                             <select name="sous-categorie_4" class="form-control">
 
-                                                <option name="0" selected>Choose...</option>
+                                                <option value="0" selected>Choose...</option>
 
                                             @for(sousCat <- (HomeController.DB).get_Sous_categorie(4)){
                                                 <option value ="@sousCat.id">@sousCat.nom</option>
@@ -315,7 +320,7 @@
                                             <label>Subcategorie</label>
                                             <select name="sous-categorie_5" class="form-control">
 
-                                                <option name="0" selected>Choose...</option>
+                                                <option value="0" selected>Choose...</option>
 
                                             @for(sousCat <- (HomeController.DB).get_Sous_categorie(5)){
                                                 <option value ="@sousCat.id">@sousCat.nom</option>
@@ -329,7 +334,7 @@
                                             <label>Subcategorie</label>
                                             <select name="sous-categorie_6" class="form-control">
 
-                                                <option name="0" selected>Choose...</option>
+                                                <option value="0" selected>Choose...</option>
 
                                             @for(sousCat <- (HomeController.DB).get_Sous_categorie(6)){
                                                 <option value ="@sousCat.id">@sousCat.nom</option>
@@ -343,7 +348,7 @@
                                             <label>Subcategorie</label>
                                             <select name="sous-categorie_7" class="form-control">
 
-                                                <option name="0" selected>Choose...</option>
+                                                <option value="0" selected>Choose...</option>
 
                                             @for(sousCat <- (HomeController.DB).get_Sous_categorie(7)){
                                                 <option value ="@sousCat.id">@sousCat.nom</option>
@@ -357,7 +362,7 @@
                                             <label>Subcategorie</label>
                                             <select name="sous-categorie_8" class="form-control">
 
-                                                <option name="0" selected>Choose...</option>
+                                                <option value="0" selected>Choose...</option>
 
                                             @for(sousCat <- (HomeController.DB).get_Sous_categorie(8)){
                                                 <option value ="@sousCat.id">@sousCat.nom</option>
@@ -371,7 +376,7 @@
                                             <label>Subcategorie</label>
                                             <select name="sous-categorie_9" class="form-control">
 
-                                                <option name="0" selected>Choose...</option>
+                                                <option value="0" selected>Choose...</option>
 
                                             @for(sousCat <- (HomeController.DB).get_Sous_categorie(10)){
                                                 <option value ="@sousCat.id">@sousCat.nom</option>
@@ -385,7 +390,7 @@
                                             <label>Subcategorie</label>
                                             <select name="sous-categorie_10" class="form-control">
 
-                                                <option name="0" selected>Choose...</option>
+                                                <option value="0" selected>Choose...</option>
 
                                             @for(sousCat <- (HomeController.DB).get_Sous_categorie(11)){
                                                 <option value ="@sousCat.id">@sousCat.nom</option>
@@ -399,7 +404,7 @@
                                             <label>Subcategorie</label>
                                             <select name="sous-categorie_11" class="form-control">
 
-                                                <option name="0" selected>Choose...</option>
+                                                <option value="0" selected>Choose...</option>
 
                                             @for(sousCat <- (HomeController.DB).get_Sous_categorie(12)){
                                                 <option value ="@sousCat.id">@sousCat.nom</option>
@@ -413,7 +418,7 @@
                                             <label>Subcategorie</label>
                                             <select name="sous-categorie_12" class="form-control">
 
-                                                <option name="0" selected>Choose...</option>
+                                                <option value="0" selected>Choose...</option>
 
                                             @for(sousCat <- (HomeController.DB).get_Sous_categorie(13)){
                                                 <option value ="@sousCat.id">@sousCat.nom</option>
@@ -427,7 +432,7 @@
                                             <label>Subcategorie</label>
                                             <select name="sous-categorie_13" class="form-control">
 
-                                                <option name="0" selected>Choose...</option>
+                                                <option value="0" selected>Choose...</option>
 
                                             @for(sousCat <- (HomeController.DB).get_Sous_categorie(16)){
                                                 <option value ="@sousCat.id">@sousCat.nom</option>
@@ -445,10 +450,10 @@
                                     <div id="recurrence" class="hidden-categorie">
                                         <div class="form-group">
                                             <select name="recurrence" class="form-control">
+                                                <option value ="0">choose...</option>
                                                 @for(rec <- (HomeController.DB).getRecurrence()){
                                                     <option value="@rec.getId()">@rec.getName()</option>
                                                 }
-                                                <option value ="">choose...</option>
                                             </select>
                                         </div> <!-- form-group end.// -->
                                     </div>
@@ -543,7 +548,6 @@
             </div>
         </div>
         <!-- Gestion bouton add -->
-        <!--} -->
         <div id="main" style="z-index:0">
         <!-- Navigation -->
         <nav class="navbar navbar-expand-md navbar-light bg-light sticky-top">
