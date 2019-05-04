@@ -367,32 +367,42 @@ public class HomeController extends Controller {
     }
 
     private Result ModelTrans(int id_trans){
-        /*DynamicForm form = formFactory.form().bindFromRequest();
+        DynamicForm form = formFactory.form().bindFromRequest();
 
         double amount = Double.parseDouble(form.get("amount"));
-        int idCat = Int.parseInt(form.get("categorie"));
-        ArrayList<String> subsCat = new ArrayList<>{Arrays.asList(form.get("sous-categorie_1"),form.get("sous-categorie_2"),
+        if (amount <= 0)
+        {
+            return redirect("/");
+        }
+
+
+        //int idCat = Integer.parseInt(form.get("categorie"));
+        ArrayList<String> subsCat = new ArrayList<>(Arrays.asList(form.get("sous-categorie_1"),form.get("sous-categorie_2"),
                 form.get("sous-categorie_3"),form.get("sous-categorie_4"),form.get("sous-categorie_5"),
                 form.get("sous-categorie_6"),form.get("sous-categorie_7"),form.get("sous-categorie_8"),
                 form.get("sous-categorie_9"),form.get("sous-categorie_10"),form.get("sous-categorie_11"),
-                form.get("sous-categorie_12"),form.get("sous-categorie_13"))};
+                form.get("sous-categorie_12"),form.get("sous-categorie_13")));
 
         HashSet<String> uniquesSubcat = new HashSet(subsCat);
         int idSubCat = 0;
         for(String uniq : uniquesSubcat)
         {
-            if(Int.parseInt(uniq) != 0)
+            if(Integer.parseInt(uniq) != 0)
             {
-                idSubCat = 0;
+                idSubCat = Integer.parseInt(uniq);
             }
         }
+        //return ok(views.html.index.render(Integer.toString(amount),user));
+        //return ok(views.html.index.render(Double.toString(amount),user));
+
         int userId = user.getId();
-        int recId = form.get("recurrence");
-*/
+        int recId = Integer.parseInt(form.get("recurrence"));
 
 
+        int result = DB.addMovement(userId,amount,idSubCat,recId,"",id_trans);
 
-        return redirect("/profil");
+        return redirect("/");
+
     }
 
 }
