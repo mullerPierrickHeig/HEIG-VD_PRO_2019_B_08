@@ -16,16 +16,17 @@ public class Transaction {
     public int id;
     public double valeur;
     public String date;
-    public Modele_transaction modele_transaction;
+    public int idRecurrence;
 
     Transaction() {
 
     }
     // tout
-    public Transaction(double valeur, String date, Modele_transaction modele_transaction){
+    public Transaction(int id, double valeur, String date, int idRecurence){
+        this.id = id;
         this.valeur = valeur;
         this.date = date;
-        this.modele_transaction = modele_transaction;
+        this.idRecurrence = idRecurence;
     }
 
 }
