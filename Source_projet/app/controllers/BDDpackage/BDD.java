@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.Types;
+import java.sql.CallableStatement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -1089,14 +1090,12 @@ public class BDD {
         String SQL  = "CALL add_sous_cat_perso(?, ?)";
 
         try{
-            PreparedStatement pstmt = conn.prepareStatement(SQL);
+            CallableStatement cs = conn.prepareCall(SQL);
 
-            pstmt.setInt(1, id_sous_cat);
-            pstmt.setInt(2, id_user);
+            cs.setInt(1, id_sous_cat);
+            cs.setInt(2, id_user);
 
-            ResultSet rs = pstmt.executeQuery();
-
-            rs.execute();
+            cs.execute();
         }
         catch(SQLException ex){
             Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
