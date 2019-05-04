@@ -295,7 +295,7 @@ public class HomeController extends Controller {
         ArrayList<Statut> statut = new ArrayList<Statut>();
         statut = DB.get_Statut();
         // Retour a la page souhaitée (profil)
-        return ok( views.html.utilisateur.render( DB.UtilisateurByID( 1 ),alerte,message,pays,statut) );
+        return ok( views.html.utilisateur.render( DB.UtilisateurByID( user.getId() ),alerte,message,pays,statut) );
     }
 
     // Gestion des options

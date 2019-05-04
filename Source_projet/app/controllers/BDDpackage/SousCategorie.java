@@ -16,19 +16,21 @@ public class SousCategorie {
     public String nom;
     public Integer id = null;
     public Categorie categorie;
+    public Boolean is_global;
 
-    SousCategorie(Integer id, String nom, Categorie categorie){
+    SousCategorie(Integer id, String nom, Categorie categorie, Boolean is_global){
         this.id = id;
         this.nom = nom;
         this.categorie = categorie;
+        this.is_global = is_global;
     }
 
     public SousCategorie(String nom, Categorie categorie){
-        this(null,nom,categorie);
+        this(null,nom,categorie,true);
     }
 
     SousCategorie(int id, String nom){
-        this(id,nom,null);
+        this(id,nom,null,true);
     }
 
 
