@@ -1,0 +1,51 @@
+@*
+ Permet d'afficher une liste de sous catégorie
+
+*@
+
+@import controllers.BDDpackage.Utilisateur
+
+@(user : Utilisateur)
+
+
+<div class="card-header" id="headingThree">
+    <h5 class="mb-0">
+        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+            Add limit
+        </button>
+    </h5>
+</div>
+<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+    <div class="card-body sidebar-menu-text">
+        <form>
+            <div class="form-group">
+                <label>Amount</label>
+                <input type="number" name="amount" id="amountId-limit" step=0.05 value="0" min="0" max="100000000" class="form-control"  placeholder="">
+            </div> <!-- form-group end.// -->
+            <div class="form-group">
+                <label>Categorie</label>
+                <select  id="catSel-limit" name="categorie" class="form-control" onchange="displaySousCatSelIncome();">
+                    <option value="0" selected>choose...</option>
+                    @for(cat <- (HomeController.DB).getAllCategories()) {
+                        <option value="@cat.id">@cat.nom</option>
+                    }
+                </select>
+            </div> <!-- form-group end.// -->
+
+            <div class="form-group">
+                <label>Recurrence</label>
+            <div id="recurrence-limit">
+                <select name="recurrence" class="form-control">
+                    <option value ="0">choose...</option>
+                    @for(rec <- (HomeController.DB).getRecurrence()){
+                        <option value="@rec.getId()">@rec.getName()</option>
+                    }
+                    <option value ="0">choose...</option>
+                </select>
+            </div>
+        </div>
+
+    <button type="submit" class="btn btn-primary btn-block"> Add </button>
+        </form>
+    </div>
+</div>
