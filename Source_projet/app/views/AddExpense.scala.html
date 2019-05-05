@@ -120,7 +120,13 @@
 
 <script type = "text/javascript">
         function validateFormExpense() {
-            var x = document.forms["form-add-expense"]["categorie"].value;
+            var x = document.forms["form-add-expense"]["amount"].value;
+            if(x == "0") {
+                alert("Insert a valid amount");
+                return false;
+            }
+
+            x = document.forms["form-add-expense"]["categorie"].value;
             if (x == "0" || x == 0) {
                 alert("Choose a categorie");
                 return false;
@@ -136,8 +142,6 @@
                     return false;
                 }
             }
-
-
             return true;
         }
 </script>
@@ -374,7 +378,6 @@
                             @for(rec <- (HomeController.DB).getRecurrence()){
                                 <option value="@rec.getId()">@rec.getName()</option>
                             }
-                            <option value ="0">choose...</option>
                         </select>
                     </div> <!-- form-group end.// -->
                 </div>
