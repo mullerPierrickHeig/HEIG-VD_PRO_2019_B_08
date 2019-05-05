@@ -14,6 +14,7 @@ package controllers.BDDpackage;
 public class Transaction {
 
     public int id;
+    public String name;
     public double valeur;
     public String date;
     public int idRecurrence;
@@ -22,8 +23,9 @@ public class Transaction {
 
     }
     // tout
-    public Transaction(int id, double valeur, String date, int idRecurence){
+    public Transaction(int id, String name, double valeur, String date, int idRecurence){
         this.id = id;
+        this.name = name;
         this.valeur = valeur;
         this.date = date;
         this.idRecurrence = idRecurence;
