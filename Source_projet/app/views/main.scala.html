@@ -53,50 +53,15 @@
     </head>
 
     <body>
-        <!-- -->
-
-        <script type="text/javascript">
-            function visualiseExpense(){
-                //text base
-                var textAmount = "Expense entered :";
-                var textFinalSolde = "New balance     :";
-
-                //recuperation Amount
-                var tmpAmount = Math.round(document.getElementById("amountId").value * 100) / 100;
-
-                //Calcul solde après mouvement
-                var finalSolde = Math.round((@user.getSolde() - tmpAmount) * 100) / 100;
-
-                //Création des affichages
-                textAmount = textAmount.concat(tmpAmount);
-                textFinalSolde = textFinalSolde.concat(finalSolde);
-
-                //affichage
-                document.getElementById("amountVisualize").innerHTML = textAmount;
-                document.getElementById("afterSolde").innerHTML = textFinalSolde;
 
 
-            }
-
-
-            function sendVisualize()
-            {
-                if(validateFormExpense())
-                {
-                    closeNav();
-                    document.forms["form-add-expense"].submit();
-                }
-
-                //document.getElementsByName("form-add-expense").submit();
-            }
-        </script>
         <!-- Ajouter at + decommenter pour gestion bouton add user -->
         <!-- if( user.getId() != 0) -->
         <script type = "text/javascript">
                 /* Set the width of the side navigation to 250px and the left margin of the page content to 250px and add a black background color to body */
                 function openNav() {
                     document.getElementById("mySidenav").style.width = "50%";
-                    document.getElementById("mySidenav").style.boxShadow = "0 0 0 10000px rgba(0,0,0,.50)";
+                    document.getElementById("mySidenav").style.boxShadow = "0 0 0 10000px rgba(500,500,600,.75)";
                     document.getElementById("logo-img").style.pointerEvents = "none";
                     displaySousCatSel();
                 }
@@ -109,56 +74,6 @@
                 }
         </script>
 
-        <script>
-            function hideAnySubcat(){
-                document.getElementById("subCat1").style.display = "none";
-                document.getElementById("subCat2").style.display = "none";
-                document.getElementById("subCat3").style.display = "none";
-                document.getElementById("subCat4").style.display = "none";
-                document.getElementById("subCat5").style.display = "none";
-                document.getElementById("subCat6").style.display = "none";
-                document.getElementById("subCat7").style.display = "none";
-                document.getElementById("subCat8").style.display = "none";
-                document.getElementById("subCat10").style.display = "none";
-                document.getElementById("subCat11").style.display = "none";
-                document.getElementById("subCat12").style.display = "none";
-                document.getElementById("subCat13").style.display = "none";
-                document.getElementById("subCat16").style.display = "none";
-            }
-        </script>
-
-        <script type = "text/javascript">
-                function displaySousCatSel() {
-                    var e = document.getElementById("catSel");
-                    var f = e.options[e.selectedIndex].value;
-                    if(f == 9 || f == 0) {
-                        hideAnySubcat();
-                    } else {
-                        var i = 0;
-                        for(i = 0; i < 17; i++) {
-                            if(f == i) {
-                                hideAnySubcat();
-                                var str = i.toString();
-                                var str2 = "subCat";
-                                var str3 = str2.concat(str);
-                                document.getElementById(str3).style.display = "inline";
-                            }
-                        }
-                    }
-                }
-        </script>
-
-        <script type = "text/javascript">
-                function displayRecurrence() {
-                    if (document.getElementById('chk1').checked)
-                    {
-                        document.getElementById("recurrence").style.display = "inline";
-                    } else
-                    {
-                        document.getElementById("recurrence").style.display = "none";
-                    }
-                }
-        </script>
 
         <script type = "text/javascript">
                 function displaySousCatSelIncome() {
@@ -184,27 +99,6 @@
                 }
         </script>
 
-        <script type = "text/javascript">
-                function validateFormExpense() {
-                    var x = document.forms["form-add-expense"]["categorie"].value;
-                    if (x == "0" || x == 0) {
-                        alert("Choose a categorie");
-                        return false;
-                    }
-                    x = document.forms["form-add-expense"]["categorie"].value;
-                    if (x == "0" || x == 0) {
-                        alert("Choose a categorie");
-                        return false;
-                    }
-                    x = document.forms["form-add-expense"]["categorie"].value;
-                    return true;
-                }
-        </script>
-
-        <script type = "text/javascript">
-
-        </script>
-
 
         <!-- <div id="outNav" class="out-side-nav" onclick="closeNav()"></div> -->
 
@@ -220,7 +114,9 @@
                     </div>
                     <div class="card-main">
                         @views.html.AddIncome.render(user )
-
+                    </div>
+                    <div class="card-main">
+                        @views.html.AddLimit.render(user )
                     </div>
                 </div>
             </div>
