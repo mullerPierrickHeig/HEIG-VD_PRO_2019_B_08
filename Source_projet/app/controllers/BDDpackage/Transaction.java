@@ -14,18 +14,21 @@ package controllers.BDDpackage;
 public class Transaction {
 
     public int id;
+    public String name;
     public double valeur;
     public String date;
-    public Modele_transaction modele_transaction;
+    public int idRecurrence;
 
     Transaction() {
 
     }
     // tout
-    public Transaction(double valeur, String date, Modele_transaction modele_transaction){
+    public Transaction(int id, String name, double valeur, String date, int idRecurence){
+        this.id = id;
+        this.name = name;
         this.valeur = valeur;
         this.date = date;
-        this.modele_transaction = modele_transaction;
+        this.idRecurrence = idRecurence;
     }
 
 }
