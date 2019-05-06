@@ -138,28 +138,22 @@ public class PDF {
 
             PdfPCell c1 = new PdfPCell(new Phrase("Sous catégorie"));
             c1.setHorizontalAlignment(Element.ALIGN_CENTER);
+            c1.setVerticalAlignment(Element.ALIGN_MIDDLE);
             c1.setBorderWidth(2f);
-            c1.setHorizontalAlignment(1);
-            c1.setVerticalAlignment(1);
+            c1.setFixedHeight(50f);
+
             table.addCell(c1);
 
-            c1 = new PdfPCell(new Phrase("Date"));
-            c1.setHorizontalAlignment(Element.ALIGN_CENTER);
-            c1.setBorderWidth(2f);
-            c1.setHorizontalAlignment(1);
-            c1.setVerticalAlignment(1);
+            c1.setPhrase(new Phrase("Date"));
             table.addCell(c1);
 
-            c1 = new PdfPCell(new Phrase("Montant"));
-            c1.setHorizontalAlignment(Element.ALIGN_CENTER);
-            c1.setBorderWidth(2f);
-            c1.setHorizontalAlignment(1);
-            c1.setVerticalAlignment(1);
+            c1.setPhrase(new Phrase("Montant"));
             table.addCell(c1);
 
 
             for ( Transaction transaction : (HomeController.DB).getAllTransaction(user.id) ){
                 c1 = new PdfPCell(new Phrase(transaction.name));
+                c1.setMinimumHeight(25f);
                 c1.setHorizontalAlignment(1);
                 c1.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 table.addCell(c1);
