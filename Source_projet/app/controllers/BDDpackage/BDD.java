@@ -1150,12 +1150,11 @@ public class BDD {
     }
 
 
-
     public ArrayList<Transaction> getAllTransaction(int userId)
     {
 
         String SQL = "Select public.transaction.transaction_id, public.sous_categorie.nom, public.transaction.valeur," +
-                "public.transaction.date, public.modele_transaction.recurrence_id  FROM " + table("transaction") + " INNER JOIN " + table("modele_transaction")
+                "public.transaction.date, public.modele_transaction.recurrence_id ,public.transaction.timestamp_solde FROM " + table("transaction") + " INNER JOIN " + table("modele_transaction")
                 + " ON " + table("transaction") + ".modele_transaction_id = " + table("modele_transaction") +
                 ".modele_transaction_id" + " INNER JOIN "+ table("sous_categorie")+ " ON " + table("modele_transaction")
                 +".sous_categorie_id = " +table("sous_categorie") + ".sous_categorie_id  WHERE " + table("modele_transaction") + ".utilisateur_id = ? ORDER BY + " +
@@ -1171,7 +1170,7 @@ public class BDD {
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
-                trans.add(new Transaction(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getString(4),rs.getInt(5)));
+                trans.add(new Transaction(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getString(4),rs.getInt(5),rs.getDouble(6)));
             }
         }
         catch(SQLException ex){
@@ -1186,7 +1185,7 @@ public class BDD {
     {
 
         String SQL = "Select public.transaction.transaction_id, public.sous_categorie.nom, public.transaction.valeur," +
-                "public.transaction.date, public.modele_transaction.recurrence_id  FROM " + table("transaction") + " INNER JOIN " + table("modele_transaction")
+                "public.transaction.date, public.modele_transaction.recurrence_id,public.transaction.timestamp_solde  FROM " + table("transaction") + " INNER JOIN " + table("modele_transaction")
                 + " ON " + table("transaction") + ".modele_transaction_id = " + table("modele_transaction") +
                 ".modele_transaction_id" + " INNER JOIN "+ table("sous_categorie")+ " ON " + table("modele_transaction")
                 +".sous_categorie_id = " +table("sous_categorie") + ".sous_categorie_id  WHERE " + table("modele_transaction") + ".utilisateur_id = ? AND " + table("sous_categorie")+".categorie_id = ? ORDER BY + " +
@@ -1203,7 +1202,7 @@ public class BDD {
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
-                trans.add(new Transaction(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getString(4),rs.getInt(5)));
+                trans.add(new Transaction(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getString(4),rs.getInt(5),rs.getDouble(6)));
             }
         }
         catch(SQLException ex){
@@ -1212,6 +1211,18 @@ public class BDD {
         return trans;
 
     }
+
+
+    /*public ArrayList<Transaction> getAllTransactionWithRatio(int userId, int ratio)
+    {
+        ArrayList<Transaction> result = getAllTransaction(userId);
+        ArrayList<Transaction> retArr = new ArrayList<Transaction>;
+        if(result.size > ratio * 10)
+        {
+
+        }
+    }*/
+
     /**
      * @param args the command line arguments
      */

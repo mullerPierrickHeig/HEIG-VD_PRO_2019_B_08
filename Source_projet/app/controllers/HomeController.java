@@ -397,15 +397,15 @@ public class HomeController extends Controller {
         {
             return redirect("/profil");
         }
-        return ok(views.html.historique.render("Historique",user,1));
+        return ok(views.html.historique.render("Historique",user,1,1,1));
     }
 
-    public Result historiqueCat(int cat)
+    public Result historiqueCat(int cat,int pAll,int pCat)
     {
         if(user.getId() == 0)
         {
             return redirect("/profil");
         }
-        return ok(views.html.historique.render("Historique",user,cat));
+        return ok(views.html.historique.render("Historique",user,cat,pAll,pCat));
     }
 }
