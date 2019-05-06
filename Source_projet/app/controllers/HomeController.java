@@ -408,4 +408,34 @@ public class HomeController extends Controller {
         }
         return ok(views.html.historique.render("Historique",user,cat));
     }
+
+    /* Permet de créer le PDF de l'historique d'un utilisateur*/
+    public Result creePDF()
+    {
+        DynamicForm form = formFactory.form().bindFromRequest();
+        // Récupère les informations depuis une requete POST
+        int idUser = Integer.parseInt(form.get("idUser"));
+        // S'il n'est pas connecté
+        if (idUser == 0 || user.getId() == 0)
+        {
+            return redirect("/");
+        }
+
+
+        // Récupère l'utilisateur
+        Utilisateur user = DB.UtilisateurByID(idUser);
+        // Crée le PDF
+        PDF pdf = new PDF(user);
+
+        int alerte = 1;
+        String message = "Fail PDF !";
+        if ( pdf.cree() ){
+            alerte = 2;
+            message = "Sucessfull PDF !";
+        }
+
+
+        // Retourne sur la page des Historiques
+        return ok( views.html.utilisateur.render( user,alerte,message) );
+    }
 }

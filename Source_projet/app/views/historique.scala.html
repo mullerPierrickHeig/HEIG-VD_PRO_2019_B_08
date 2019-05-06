@@ -10,6 +10,13 @@
     <div class="container">
         <div class="row">
             <div class="col-md border shadow-lg p-4 mb-4 home-row">
+                @*  *@
+            @helper.form( action = helper.CSRF(routes.HomeController.creePDF())) {
+                <form>
+                    <input type="hidden" name="idUser" value="@user.getId()">
+                    <input type="submit" value="PDF" class="btn float-right PDF_btn" style="color: white">
+                </form>
+            }
                 <h5>Overview</h5>
                 <table class="table">
                     <thead class="thead-dark">

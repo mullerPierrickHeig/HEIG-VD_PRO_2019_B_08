@@ -568,6 +568,12 @@ input:focus{
   margin-right: 5px;
 }
 
+.PDF_btn{
+  color: black;
+  background-color: red;
+  width: 100px;
+}
+
 .login_btn{
   color: black;
   background-color: #FFC312;
