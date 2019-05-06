@@ -1,7 +1,6 @@
 package controllers;
 
 import controllers.BDDpackage.BDD;
-
 import controllers.BDDpackage.Categorie;
 import controllers.BDDpackage.SousCategorie;
 import controllers.BDDpackage.Utilisateur;
@@ -12,12 +11,9 @@ import java.util.ArrayList;
 /* Dependance pour PDF */
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-
-
 import com.itextpdf.text.Document;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.tool.xml.XMLWorkerHelper;
-
 import com.itextpdf.text.Section;
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.Anchor;
@@ -25,6 +21,7 @@ import com.itextpdf.text.Chapter;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Font.FontFamily;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Paragraph;
@@ -129,38 +126,47 @@ public class PDF {
     private void createTable(Document document) {
         try {
             PdfPTable table = new PdfPTable(3);
-            // table.setBorderColor(BaseColor.BLUE);
 
-            // t.setBorderColor(BaseColor.GRAY);
-            // t.setPadding(4);
-            // t.setSpacing(4);
-            // t.setBorderWidth(1);
+            // Style d'écriture utilisé
+            Font bold = new Font(FontFamily.HELVETICA, 12, Font.BOLD);
+            Font green = new Font (new Phrase("Sous catégorie").getFont());
+            green.setColor(BaseColor.GREEN);
+            Font red = new Phrase("Sous catégorie").getFont();
+            red.setColor(BaseColor.RED);
 
-            PdfPCell c1 = new PdfPCell(new Phrase("Sous catégorie"));
-            c1.setHorizontalAlignment(Element.ALIGN_CENTER);
-            c1.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            c1.setBorderWidth(2f);
-            c1.setFixedHeight(50f);
+            PdfPCell cellHeader = new PdfPCell(new Phrase("Sous catégorie",bold));
+            // Init cell header
+            cellHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellHeader.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cellHeader.setBorderWidth(2f);
+            cellHeader.setFixedHeight(50f);
+            cellHeader.setBackgroundColor(BaseColor.GRAY);
 
-            table.addCell(c1);
+            table.addCell(cellHeader);
 
-            c1.setPhrase(new Phrase("Date"));
-            table.addCell(c1);
+            cellHeader.setPhrase(new Phrase("Date",bold));
+            table.addCell(cellHeader);
 
-            c1.setPhrase(new Phrase("Montant"));
-            table.addCell(c1);
+            cellHeader.setPhrase(new Phrase("Montant",bold));
+            table.addCell(cellHeader);
 
+            // init cell content
+            PdfPCell cellContente = new PdfPCell();
+            cellContente.setMinimumHeight(25f);
+            cellContente.setHorizontalAlignment(Element.ALIGN_MIDDLE);
+            cellContente.setVerticalAlignment(Element.ALIGN_MIDDLE);
 
             for ( Transaction transaction : (HomeController.DB).getAllTransaction(user.id) ){
-                c1 = new PdfPCell(new Phrase(transaction.name));
-                c1.setMinimumHeight(25f);
-                c1.setHorizontalAlignment(1);
-                c1.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                table.addCell(c1);
-                c1.setPhrase(new Phrase(transaction.date));
-                table.addCell(c1);
-                c1.setPhrase(new Phrase(Double.toString(transaction.valeur)));
-                table.addCell( c1);
+                cellContente.setPhrase(new Phrase(transaction.name));
+                table.addCell(cellContente);
+                cellContente.setPhrase(new Phrase(transaction.date));
+                table.addCell(cellContente);
+                // Test le type de transaction (income - expense) pour la couleur du texte
+                if (transaction.valeur < 80)
+                    cellContente.setPhrase(new Phrase(Double.toString(transaction.valeur), red));
+                else
+                    cellContente.setPhrase(new Phrase(Double.toString(transaction.valeur), green));
+                table.addCell( cellContente);
             }
 
             document.add(table);
