@@ -50,6 +50,11 @@ public class HomeController extends Controller {
         return ok(views.html.index.render("Compact Budget",user));
     }
 
+    // Page d'accueil
+    public Result Statistics()  throws SQLException {
+        return ok(views.html.Statistics.render("stats", user));
+    }
+
     // Gestion du login
     public Result LoginSubmit() {
 
@@ -181,8 +186,6 @@ public class HomeController extends Controller {
 
     // Exemple pour passer un paramètre de java -> HTML
     public Result Profil() {
-
-
         // Get user_id
         if(user.getId() == 0)
         {
