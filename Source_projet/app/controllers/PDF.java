@@ -162,10 +162,10 @@ public class PDF {
                 cellContente.setPhrase(new Phrase(transaction.date));
                 table.addCell(cellContente);
                 // Test le type de transaction (income - expense) pour la couleur du texte
-                if (transaction.valeur < 80)
-                    cellContente.setPhrase(new Phrase(Double.toString(transaction.valeur), red));
+                if (transaction.typeTransaction == 1)
+                    cellContente.setPhrase(new Phrase(Double.toString(-(transaction.valeur)), red));
                 else
-                    cellContente.setPhrase(new Phrase(Double.toString(transaction.valeur), green));
+                    cellContente.setPhrase(new Phrase('+' + Double.toString((transaction.valeur)), green));
                 table.addCell( cellContente);
             }
 
