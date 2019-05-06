@@ -32,10 +32,11 @@
                             <tr>
                                 <th scope="row">@trans.name</th>
                                 <td>@trans.date</td>
-                                @if(trans.idRecurrence == 1){
-                                    <td style="color:#53a93f">@trans.valeur</td>
-                                } else{
+                                @* Si c'est une dépense *@
+                                @if(trans.typeTransaction == 1){
                                     <td style="color:#b94a48">-@trans.valeur</td>
+                                } else{
+                                    <td style="color:#53a93f">@trans.valeur</td>
                                 }
                             </tr>
                         }
