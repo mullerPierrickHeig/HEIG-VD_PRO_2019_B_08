@@ -125,7 +125,8 @@ public class PDF {
 
     private void createTable(Document document) {
         try {
-            PdfPTable table = new PdfPTable(3);
+            PdfPTable table = new PdfPTable(4);
+            table.setWidthPercentage(90);
 
             // Style d'écriture utilisé
             Font bold = new Font(FontFamily.HELVETICA, 12, Font.BOLD);
@@ -150,6 +151,9 @@ public class PDF {
             cellHeader.setPhrase(new Phrase("Montant",bold));
             table.addCell(cellHeader);
 
+            cellHeader.setPhrase(new Phrase("Solde",bold));
+            table.addCell(cellHeader);
+
             // init cell content
             PdfPCell cellContente = new PdfPCell();
             cellContente.setMinimumHeight(25f);
@@ -167,6 +171,10 @@ public class PDF {
                 else
                     cellContente.setPhrase(new Phrase('+' + Double.toString((transaction.valeur)), green));
                 table.addCell( cellContente);
+
+                cellContente.setPhrase(new Phrase(Double.toString((transaction.timestamp_solde))));
+                table.addCell(cellContente);
+
             }
 
             document.add(table);
