@@ -29,7 +29,6 @@ public class Transaction {
     }
     // tout
 
-    public Transaction(int id, String name, double valeur, String date, int idRecurence, double timestamp_solde){
     public Transaction(int id, String name, double valeur, String date, int idRecurence, double timestamp_solde, int typeTransaction){
 
         this.id = id;
