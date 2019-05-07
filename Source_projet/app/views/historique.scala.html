@@ -75,6 +75,7 @@
                             <th scope="col">Nom sous-categorie</th>
                             <th scope="col">Date</th>
                             <th scope="col">montant</th>
+                            <th scope="col">Solde</th>
                         </tr>
                     </thead>
 
@@ -84,11 +85,12 @@
                                 <tr>
                                     <th scope="row">@trans.name</th>
                                     <td>@trans.date</td>
-                                    @if(trans.idRecurrence == 1){
-                                        <td style="color:#53a93f">@trans.valeur</td>
-                                    } else{
+                                    @if(trans.typeTransaction == 1){
                                         <td style="color:#b94a48">-@trans.valeur</td>
+                                    } else{
+                                        <td style="color:#53a93f">@trans.typeTransaction</td>
                                     }
+                                    <td>@trans.timestamp_solde</td>
                                 </tr>
                             }
                     }else{
