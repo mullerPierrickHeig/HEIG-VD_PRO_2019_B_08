@@ -52,7 +52,7 @@ public class HomeController extends Controller {
 
     // Page d'accueil
     public Result Statistics()  throws SQLException {
-        return ok(views.html.Statistics.render("stats", user));
+        return ok(views.html.Statistics.render("stats", user,4));
     }
 
     // Gestion du login
@@ -400,16 +400,16 @@ public class HomeController extends Controller {
         {
             return redirect("/profil");
         }
-        return ok(views.html.historique.render("Historique",user,1));
+        return ok(views.html.historique.render("Historique",user,1,1,1));
     }
 
-    public Result historiqueCat(int cat)
+    public Result historiqueCat(int cat,int pAll,int pCat)
     {
         if(user.getId() == 0)
         {
             return redirect("/profil");
         }
-        return ok(views.html.historique.render("Historique",user,cat));
+        return ok(views.html.historique.render("Historique",user,cat,pAll,pCat));
     }
 
     /* Permet de créer le PDF de l'historique d'un utilisateur*/

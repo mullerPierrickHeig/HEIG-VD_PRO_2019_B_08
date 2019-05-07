@@ -23,6 +23,8 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.text.DateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 
 
 
@@ -946,7 +948,80 @@ public class BDD {
         }
     }
 
+    public double getSumExpensesOnSpecialPeriodCategorie(int userId,int cat,int idRecurence)
+    {
+        ArrayList<Transaction> temp = getAllTransactionByCatId(userId,cat);
+        ArrayList<Transaction> result = new ArrayList<Transaction>();
+        int nbJours = translateRecurrenceInDays(idRecurence);
+        double somme = 0;
+        for(Transaction trans : temp)
+        {
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            Date dateTrans = null;
+            try {
+                dateTrans = df.parse(trans.date);
+            }catch (Exception e)
+            {
+                Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, e);
+                return 0;
+            }
+            LocalDate nowDate = LocalDate.now().minusDays(nbJours);
 
+            if(dateTrans.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate().compareTo(nowDate) >= 0 ){
+                somme += trans.valeur;
+            }
+        }
+        return somme;
+
+    }
+
+    private int translateRecurrenceInDays(int idRecurrence)
+    {
+        String SQL = "Select periodicite FROM " + table("recurence") + " WHERE recurence_id = ?;";
+        try
+        {
+            PreparedStatement pstmt = conn.prepareStatement(SQL);
+            pstmt.setInt(1,idRecurrence);
+            ResultSet rs = pstmt.executeQuery();
+
+            if(rs.next()) {
+                String val = rs.getString(1);
+                switch(val)
+                {
+                    case "Annuel":
+                        return 365;
+
+                    case"Quotidien":
+                        return 1;
+
+                    case "Trimestriel":
+                        return 91;
+
+                    case"Semestriel":
+                        return 182;
+
+                    case "Mensuel":
+                        return 31;
+
+                    case"Hebdomadaire":
+                        return 7;
+
+                    default:
+                        return 0;
+                }
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        catch(SQLException ex){
+            Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
 
     public ArrayList<Categorie> getAllCategories() {
         ArrayList<Categorie> categories = new ArrayList<Categorie>();
@@ -1150,12 +1225,13 @@ public class BDD {
     }
 
 
-
     public ArrayList<Transaction> getAllTransaction(int userId)
     {
 
         String SQL = "Select public.transaction.transaction_id, public.sous_categorie.nom, public.transaction.valeur," +
-                "public.transaction.date, public.modele_transaction.recurrence_id, public.modele_transaction.type_transaction_id FROM " + table("transaction") + " INNER JOIN " + table("modele_transaction")
+
+                "public.transaction.date, public.modele_transaction.recurrence_id ,public.transaction.timestamp_solde," +
+                "public.modele_transaction.type_transaction_id FROM " + table("transaction") + " INNER JOIN " + table("modele_transaction")
                 + " ON " + table("transaction") + ".modele_transaction_id = " + table("modele_transaction") +
                 ".modele_transaction_id" + " INNER JOIN "+ table("sous_categorie")+ " ON " + table("modele_transaction")
                 +".sous_categorie_id = " +table("sous_categorie") + ".sous_categorie_id  WHERE " + table("modele_transaction") + ".utilisateur_id = ? ORDER BY + " +
@@ -1171,7 +1247,8 @@ public class BDD {
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
-                trans.add(new Transaction(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getString(4),rs.getInt(5), rs.getInt(6)));
+
+                trans.add(new Transaction(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getString(4),rs.getInt(5),rs.getDouble(6), rs.getInt(7)));
             }
         }
         catch(SQLException ex){
@@ -1186,7 +1263,8 @@ public class BDD {
     {
 
         String SQL = "Select public.transaction.transaction_id, public.sous_categorie.nom, public.transaction.valeur," +
-                "public.transaction.date, public.modele_transaction.recurrence_id, public.modele_transaction.type_transaction_id FROM " + table("transaction") + " INNER JOIN " + table("modele_transaction")
+
+                "public.transaction.date, public.modele_transaction.recurrence_id, public.modele_transaction.type_transaction_id ,public.transaction.timestamp_solde FROM " + table("transaction") + " INNER JOIN " + table("modele_transaction")
                 + " ON " + table("transaction") + ".modele_transaction_id = " + table("modele_transaction") +
                 ".modele_transaction_id" + " INNER JOIN "+ table("sous_categorie")+ " ON " + table("modele_transaction")
                 +".sous_categorie_id = " +table("sous_categorie") + ".sous_categorie_id  WHERE " + table("modele_transaction") + ".utilisateur_id = ? AND " + table("sous_categorie")+".categorie_id = ? ORDER BY + " +
@@ -1203,7 +1281,8 @@ public class BDD {
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
-                trans.add(new Transaction(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getString(4),rs.getInt(5), rs.getInt(6)));
+
+                trans.add(new Transaction(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getString(4),rs.getInt(5),rs.getDouble(6), rs.getInt(7)));
             }
         }
         catch(SQLException ex){
@@ -1212,6 +1291,18 @@ public class BDD {
         return trans;
 
     }
+
+
+    /*public ArrayList<Transaction> getAllTransactionWithRatio(int userId, int ratio)
+    {
+        ArrayList<Transaction> result = getAllTransaction(userId);
+        ArrayList<Transaction> retArr = new ArrayList<Transaction>;
+        if(result.size > ratio * 10)
+        {
+
+        }
+    }*/
+
     /**
      * @param args the command line arguments
      */

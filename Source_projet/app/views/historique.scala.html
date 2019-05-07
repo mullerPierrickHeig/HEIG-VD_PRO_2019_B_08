@@ -2,7 +2,7 @@
 @import controllers.BDDpackage.BDD
 @import controllers.BDDpackage.Transaction
 
-@(titre: String, user : Utilisateur,catId : Integer)
+@(titre: String, user : Utilisateur,catId : Integer,pAll : Integer, pCat : Integer)
 
 @main(titre: String)(user) {
 
@@ -21,25 +21,35 @@
                 <table class="table">
                     <thead class="thead-dark">
                         <tr>
-                            <th scope="col">ID</th>
+                            <th scope="col">Nom sous-categorie</th>
                             <th scope="col">Date</th>
                             <th scope="col">montant</th>
+                            <th scope="col">Solde</th>
                         </tr>
                     </thead>
 
                     <tbody>
-                        @for(trans <- (HomeController.DB).getAllTransaction(user.getId())){
+                        @if(((HomeController.DB).getAllTransaction(user.getId())).size() != 0){
+                            @for(trans <- (HomeController.DB).getAllTransaction(user.getId())){
+                                <tr>
+                                    <th scope="row">@trans.name</th>
+                                    <td>@trans.date</td>
+                                    @if(trans.typeTransaction == 1){
+                                        <td style="color:#b94a48">-@trans.valeur</td>
+                                    } else{
+                                        <td style="color:#53a93f">@trans.typeTransaction</td>
+                                    }
+                                    <td>@trans.timestamp_solde</td>
+                                </tr>
+                            }
+                        }else{
                             <tr>
-                                <th scope="row">@trans.name</th>
-                                <td>@trans.date</td>
-                                @* Si c'est une dépense *@
-                                @if(trans.typeTransaction == 1){
-                                    <td style="color:#b94a48">-@trans.valeur</td>
-                                } else{
-                                    <td style="color:#53a93f">@trans.valeur</td>
-                                }
+                                <td>
+                                    <p> Pas de transactions à afficher</p>
+                                </td>
                             </tr>
                         }
+
 
                     </tbody>
                 </table>
@@ -69,15 +79,23 @@
                     </thead>
 
                     <tbody>
-                    @for(trans <- (HomeController.DB).getAllTransactionByCatId(user.getId(),catId)){
-                        <tr>
-                            <th scope="row">@trans.name</th>
-                            <td>@trans.date</td>
-                            @if(trans.idRecurrence == 1){
-                                <td style="color:#53a93f">@trans.valeur</td>
-                            } else{
-                                <td style="color:#b94a48">-@trans.valeur</td>
+                    @if(((HomeController.DB).getAllTransactionByCatId(user.getId(),catId)).size() != 0){
+                            @for(trans <- (HomeController.DB).getAllTransactionByCatId(user.getId(),catId)){
+                                <tr>
+                                    <th scope="row">@trans.name</th>
+                                    <td>@trans.date</td>
+                                    @if(trans.idRecurrence == 1){
+                                        <td style="color:#53a93f">@trans.valeur</td>
+                                    } else{
+                                        <td style="color:#b94a48">-@trans.valeur</td>
+                                    }
+                                </tr>
                             }
+                    }else{
+                        <tr>
+                            <td>
+                                <p> Pas de transactions à afficher</p>
+                            </td>
                         </tr>
                     }
 
