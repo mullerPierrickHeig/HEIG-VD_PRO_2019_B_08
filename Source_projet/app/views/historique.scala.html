@@ -10,6 +10,13 @@
     <div class="container">
         <div class="row">
             <div class="col-md border shadow-lg p-4 mb-4 home-row">
+                @*  *@
+            @helper.form( action = helper.CSRF(routes.HomeController.creePDF())) {
+                <form>
+                    <input type="hidden" name="idUser" value="@user.getId()">
+                    <input type="submit" value="PDF" class="btn float-right PDF_btn" style="color: white">
+                </form>
+            }
                 <h5>Overview</h5>
                 <table class="table">
                     <thead class="thead-dark">
@@ -27,10 +34,10 @@
                                 <tr>
                                     <th scope="row">@trans.name</th>
                                     <td>@trans.date</td>
-                                    @if(trans.idRecurrence == 1){
-                                        <td style="color:#53a93f">@trans.valeur</td>
+                                    @if(trans.typeTransaction == 1){
+                                        <td style="color:#53a93f">-@trans.valeur</td>
                                     } else{
-                                        <td style="color:#b94a48">-@trans.valeur</td>
+                                        <td style="color:#b94a48">@trans.valeur</td>
                                     }
                                     <td>@trans.timestamp_solde</td>
                                 </tr>
