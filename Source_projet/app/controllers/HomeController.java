@@ -52,7 +52,7 @@ public class HomeController extends Controller {
 
     // Page d'accueil
     public Result Statistics()  throws SQLException {
-        return ok(views.html.Statistics.render("stats", user));
+        return ok(views.html.Statistics.render("stats", user,4));
     }
 
     // Gestion du login

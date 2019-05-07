@@ -32,4 +32,9 @@ public class Categorie {
         this(id,nom,null);
     }
 
+    public String getName()
+    {
+        return nom;
+    }
+
 }
