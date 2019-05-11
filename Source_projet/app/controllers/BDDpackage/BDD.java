@@ -1292,6 +1292,27 @@ public class BDD {
 
     }
 
+    public int addLimit(double amount,int userId,int recId,int sousCatId,int catId)
+    {
+        String SQL = "INSERT INTO " + table("limite") + "(date, valeur, utilisateur_id, recurrence_id,sous_categorie_id,categorie_id) " +
+                "VALUES ( NOW(),"+amount+", ?, ?, ?, ?);";
+
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(SQL);
+
+            //pstmt.setBigDecimal(1, valeur);
+            pstmt.setInt(1, userId);
+            pstmt.setInt(2, recId);
+            pstmt.setNull(3,java.sql.Types.INTEGER);
+            pstmt.setInt(4, catId);
+            pstmt.executeUpdate();
+            return 0;
+        }
+        catch(SQLException ex){
+            Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+            return -1;
+        }
+    }
 
     /*public ArrayList<Transaction> getAllTransactionWithRatio(int userId, int ratio)
     {

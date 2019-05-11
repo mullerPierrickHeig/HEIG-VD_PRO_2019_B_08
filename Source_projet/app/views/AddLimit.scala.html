@@ -17,6 +17,7 @@
 </div>
 <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
     <div class="card-body sidebar-menu-text">
+        @helper.form(action = helper.CSRF(routes.HomeController.AddLimit()),'name -> "form-add-limit") {
         <form>
             <div class="form-group">
                 <label>Amount</label>
@@ -36,16 +37,15 @@
                 <label>Recurrence</label>
             <div id="recurrence-limit">
                 <select name="recurrence" class="form-control">
-                    <option value ="0">choose...</option>
                     @for(rec <- (HomeController.DB).getRecurrence()){
                         <option value="@rec.getId()">@rec.getName()</option>
                     }
-                    <option value ="0">choose...</option>
                 </select>
             </div>
         </div>
 
     <button type="submit" class="btn btn-primary btn-block"> Add </button>
         </form>
+        }
     </div>
 </div>
