@@ -52,7 +52,7 @@ public class HomeController extends Controller {
 
     // Page d'accueil
     public Result Statistics()  throws SQLException {
-        return ok(views.html.Statistics.render("stats", user,4));
+        return ok(views.html.Statistics.render("stats", user,1));
     }
 
     // Gestion du login
@@ -440,5 +440,22 @@ public class HomeController extends Controller {
 
         // Retourne sur la page des Historiques
         return ok( views.html.utilisateur.render( user,alerte,message) );
+    }
+
+    public Result AddLimit()
+    {
+        DynamicForm form = formFactory.form().bindFromRequest();
+
+        double amount = Double.parseDouble(form.get("amount"));
+        if (amount <= 0)
+        {
+            return redirect("/");
+        }
+        int userId = user.getId();
+        int recId = Integer.parseInt(form.get("recurrence"));
+        int catId = Integer.parseInt(form.get("categorie"));
+
+        int result = DB.addLimit(amount,userId,recId,0,catId);
+        return redirect("/");
     }
 }
