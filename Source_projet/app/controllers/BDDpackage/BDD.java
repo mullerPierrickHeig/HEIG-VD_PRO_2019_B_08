@@ -26,6 +26,8 @@ import java.text.DateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 
+import com.mchange.v2.c3p0.ComboPooledDataSource;
+import javax.sql.DataSource;
 
 
 
@@ -35,12 +37,16 @@ import java.time.ZoneId;
  * @since 1.0
  */
 public class BDD {
-    // Pour te connecter utilise un Login/Group roles admin (par default : postgres et ton mot de passe)
-                                                               // Test
-    private String url = "jdbc:postgresql://127.0.0.1:5432/BD_Budget"; // http://127.0.0.1:50165/browser/ ou  "jdbc:postgresql://localhost/dvdrental"
-    private String user = "postgres";       // postgres   user_files (droit uniquement de selection)
-    private String password = "123456789";          // 123456789     123
-    private Connection conn = null;
+    // Par defaut
+    private String url = "jdbc:postgresql://127.0.0.1:5432/BD_Budget";
+    private String user = "postgres";
+    private String password = "123456789";
+    private String driver = "org.postgresql.Driver";
+
+
+    private Connection connec = null;
+    // Permet d'avoir un pooling de connection
+    private static ComboPooledDataSource dataSource;
 
 
     public String getUser(){
@@ -48,19 +54,66 @@ public class BDD {
     }
     
     public BDD(){
-         try {
-            conn = DriverManager.getConnection(url, user, password);
-            System.out.println("Connected to the PostgreSQL server successfully.");
-        } catch (SQLException e) {
-            System.out.println("Noo.");
-            System.out.println(e.getMessage());
-        }
+        this.Connection();
     }
     
     public BDD(String url, String user, String password){
         this.url = url;
         this.user = user;
         this.password = password;
+
+        this.Connection();
+    }
+
+    // Permet de mettre en place le pooling des connections à la base de donnée
+    private void Connection(){
+
+        try {
+
+            dataSource = new ComboPooledDataSource();
+
+            dataSource.setDriverClass(driver);
+            dataSource.setJdbcUrl(url);
+            dataSource.setUser(user);
+            dataSource.setPassword(password);
+
+            dataSource.setInitialPoolSize(101);
+            //dataSource.setMinPoolSize(100);
+            dataSource.setMaxPoolSize(1000);
+            dataSource.setAcquireIncrement(5);
+
+
+
+        } catch (Exception e) {
+            System.out.println("Errore ------------- POLLING----------------");
+            e.printStackTrace();
+        }
+
+
+        /*
+        try {
+            conn = DriverManager.getConnection(url, user, password);
+            System.out.println("Connected to the PostgreSQL server successfully.");
+        } catch (SQLException e) {
+            System.out.println("Error connection !");
+            System.out.println(e.getMessage());
+        }*/
+    }
+
+    public static DataSource getDataSource(){
+        return dataSource;
+    }
+
+    public static Connection getConnection(){
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            // System.out.println("Connected to the PostgreSQL server successfully.");
+        } catch (Exception e) {
+            System.out.println("Error connection !");
+            System.out.println(e.getMessage());
+        }
+        return conn;
     }
     
     /**
@@ -81,21 +134,29 @@ public class BDD {
      */
     private String paysString(int PaysID) {
         String pays = "";
-        
+        Connection conn = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
         try {
             String SQL = "SELECT * "
                     + "FROM " + table("pays")
                     + "WHERE pays_id = ?";
-            
-            PreparedStatement pstmt = conn.prepareStatement(SQL);
+
+            conn = getConnection();
+            pstmt = conn.prepareStatement(SQL);
             
             pstmt.setInt(1, PaysID);
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
             rs.next();
             pays = rs.getString("nom");
     
         } catch (SQLException ex) {
             Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try { rs.close(); } catch (Exception e) { /* ignored */ }
+            try { pstmt.close(); } catch (Exception e) { /* ignored */ }
+            try { conn.close(); } catch (Exception e) { /* ignored */ }
         }
         
         return pays;
@@ -111,16 +172,21 @@ public class BDD {
      */
     private ArrayList<Boolean> optionsString(int OptionsID) {
         ArrayList<Boolean> options = new ArrayList<Boolean>();
+
+        Connection conn = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
         
         try {
             String SQL = "SELECT * "
                     + "FROM " + table("options")
                     + " WHERE options_id = ? ;";
-            
-            PreparedStatement pstmt = conn.prepareStatement(SQL);
+
+            conn = getConnection();
+            pstmt = conn.prepareStatement(SQL);
             
             pstmt.setInt(1, OptionsID);
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
 
             int i = 2;
 
@@ -131,6 +197,10 @@ public class BDD {
     
         } catch (SQLException ex) {
             Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try { rs.close(); } catch (Exception e) { /* ignored */ }
+            try { pstmt.close(); } catch (Exception e) { /* ignored */ }
+            try { conn.close(); } catch (Exception e) { /* ignored */ }
         }
         
         return options;
@@ -156,6 +226,9 @@ public class BDD {
             {
                 return false;
             }
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
             try {
                 String sql = "UPDATE " + table("utilisateur") + " set prenom=?, nom=?,email=?," +
                         "pseudo=?,genre=?,anniversaire=?,statut_id=?,pays_id=? where utilisateur_id=? ; ";
@@ -171,7 +244,8 @@ public class BDD {
                     Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, e);
                     return false;
                 }
-                PreparedStatement pstmt = conn.prepareStatement(sql);
+                conn = getConnection();
+                pstmt = conn.prepareStatement(sql);
                 pstmt.setString(1, prenom);
                 pstmt.setString(2, nom);
                 pstmt.setString(3, email);
@@ -187,6 +261,9 @@ public class BDD {
             }
             catch (SQLException ex) {
                 Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                try { pstmt.close(); } catch (Exception e) { /* ignored */ }
+                try { conn.close(); } catch (Exception e) { /* ignored */ }
             }
         return false;
 
@@ -204,7 +281,7 @@ public class BDD {
         try {
             String sql = "UPDATE " + table("utilisateur") + " set options_id=? where utilisateur_id=? ; ";
 
-            PreparedStatement pstmt = conn.prepareStatement(sql);
+            PreparedStatement pstmt = getConnection().prepareStatement(sql);
 
             pstmt.setInt(1, OptionId);
             pstmt.setInt(2,userId);
@@ -243,21 +320,29 @@ public class BDD {
      */
     private String statutString(int statutID) {
          String Statut = "";
-        
+        Connection conn = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
         try {
             String SQL = "SELECT * "
                     + "FROM " + table("statut")
                     + "WHERE statut_id = ?";
-            
-            PreparedStatement pstmt = conn.prepareStatement(SQL);
+
+            conn = getConnection();
+            pstmt = conn.prepareStatement(SQL);
             
             pstmt.setInt(1, statutID);
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
             rs.next();
             Statut = rs.getString("nom");
     
         } catch (SQLException ex) {
             Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try { rs.close(); } catch (Exception e) { /* ignored */ }
+            try { pstmt.close(); } catch (Exception e) { /* ignored */ }
+            try { conn.close(); } catch (Exception e) { /* ignored */ }
         }
         
         return Statut;
@@ -273,15 +358,20 @@ public class BDD {
     public Utilisateur UtilisateurByID(int UtilisateurID) {
 
         Utilisateur user = null;
+        Connection conn = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
         try {
             String SQL = "SELECT * "
                     + "FROM " + table("utilisateur")
                     + "WHERE utilisateur_id = ?";
-            
-            PreparedStatement pstmt = conn.prepareStatement(SQL);
+
+            conn = getConnection();
+            pstmt = conn.prepareStatement(SQL);
             
             pstmt.setInt(1, UtilisateurID);
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
             
             while (rs.next()) {
                 user = new Utilisateur( rs.getInt("utilisateur_id"),
@@ -301,6 +391,10 @@ public class BDD {
             }
         } catch (SQLException ex) {
             Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try { rs.close(); } catch (Exception e) { /* ignored */ }
+            try { pstmt.close(); } catch (Exception e) { /* ignored */ }
+            try { conn.close(); } catch (Exception e) { /* ignored */ }
         }
 
         return user;
@@ -319,10 +413,14 @@ public class BDD {
         // users.put(url, url)
         
         ArrayList<String> uniqueValues = new ArrayList<>();
+        Connection conn = null;
+        ResultSet rs = null;
+        Statement st = null;
 
         try {
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM " + table("utilisateur") );
+            conn = getConnection();
+            st = conn.createStatement();
+            rs = st.executeQuery("SELECT * FROM " + table("utilisateur") );
 
             
             while (rs.next()) {
@@ -332,6 +430,10 @@ public class BDD {
             }
         } catch (SQLException ex) {
             Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try { rs.close(); } catch (Exception e) { /* ignored */ }
+            try { st.close(); } catch (Exception e) { /* ignored */ }
+            try { conn.close(); } catch (Exception e) { /* ignored */ }
         }
         
         return uniqueValues;
@@ -375,16 +477,25 @@ public class BDD {
      * @throws
      */
     private boolean checkUniqueUserWithId(String email, String pseudo, int userId) {
+        Connection conn = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
         String sql = "Select * FROM " + table("utilisateur") + " WHERE (email=? OR pseudo=?) AND utilisateur_id!=?;";
         try {
-            PreparedStatement pstmt = conn.prepareStatement(sql);
+            conn = getConnection();
+            pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, email);
             pstmt.setString(2, pseudo);
             pstmt.setInt(3, userId);
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
             return !rs.next();
         } catch (SQLException ex) {
             Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try { rs.close(); } catch (Exception e) { /* ignored */ }
+            try { pstmt.close(); } catch (Exception e) { /* ignored */ }
+            try { conn.close(); } catch (Exception e) { /* ignored */ }
         }
         return false;
 
@@ -415,7 +526,7 @@ public class BDD {
                     + genre.toString() +",'"+ anniversaire +"',"+ droit_id +","+ statut_id +","+ pays_id +","+ options_id + ", " +solde +" )" +
                     " RETURNING utilisateur_id;";
             
-            Statement st = conn.createStatement();
+            Statement st = getConnection().createStatement();
             st.executeUpdate(SQL,Statement.RETURN_GENERATED_KEYS);
             ResultSet rs = st.getGeneratedKeys();
             if (rs.next()){
@@ -438,22 +549,22 @@ public class BDD {
      */
     public int checkConnectionGetId(String passwd, String userN){
 
-        // HashMap<String, String> users = new HashMap();
-        // users.put(url, url)
+        Connection conn = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
 
 
         try {
-            //Statement st = conn.createStatement();
-            //ResultSet rs = st.executeQuery("SELECT * FROM " + table("Utilisateur") + " WHERE pseudo = ? AND mdp = ?; );
             String SQL = "SELECT * "
                     + "FROM " + table("utilisateur")
                     + "WHERE pseudo = ?;";
 
-            PreparedStatement pstmt = conn.prepareStatement(SQL);
+            conn = getConnection();
+            pstmt = conn.prepareStatement(SQL);
 
             pstmt.setString(1, userN);
 
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
 
             if(rs.next())
             {
@@ -471,6 +582,10 @@ public class BDD {
 
         } catch (SQLException ex) {
             Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try { rs.close(); } catch (Exception e) { /* ignored */ }
+            try { pstmt.close(); } catch (Exception e) { /* ignored */ }
+            try { conn.close(); } catch (Exception e) { /* ignored */ }
         }
         return 0;
     }
@@ -484,10 +599,14 @@ public class BDD {
     public ArrayList<Pays> get_Pays(){
 
         ArrayList<Pays> listPays = new ArrayList<Pays>();
+        Connection conn = null;
+        ResultSet rs = null;
+        Statement st = null;
 
         try {
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM " + table("pays") );
+            conn = getConnection();
+            st = conn.createStatement();
+            rs = st.executeQuery("SELECT * FROM " + table("pays") );
 
             while (rs.next()) {
                 // Gère pas encore la couleur a voir !!
@@ -500,6 +619,10 @@ public class BDD {
             st.close();
         } catch (SQLException ex) {
             Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try { rs.close(); } catch (Exception e) { /* ignored */ }
+            try { st.close(); } catch (Exception e) { /* ignored */ }
+            try { conn.close(); } catch (Exception e) { /* ignored */ }
         }
 
         return listPays;
@@ -514,10 +637,14 @@ public class BDD {
     public ArrayList<Statut> get_Statut(){
 
         ArrayList<Statut> listStatut = new ArrayList<Statut>();
+        Connection conn = null;
+        ResultSet rs = null;
+        Statement st = null;
 
         try {
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM " + table("statut") );
+            conn = getConnection();
+            st = conn.createStatement();
+            rs = st.executeQuery("SELECT * FROM " + table("statut") );
 
             while (rs.next()) {
                 // Gère pas encore la couleur a voir !!
@@ -530,6 +657,10 @@ public class BDD {
             st.close();
         } catch (SQLException ex) {
             Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try { rs.close(); } catch (Exception e) { /* ignored */ }
+            try { st.close(); } catch (Exception e) { /* ignored */ }
+            try { conn.close(); } catch (Exception e) { /* ignored */ }
         }
 
         return listStatut;
@@ -544,10 +675,14 @@ public class BDD {
     public ArrayList<Categorie> display_Categories(){
 
         ArrayList<Categorie> listCategorie = new ArrayList<>();
+        Connection conn = null;
+        ResultSet rs = null;
+        Statement st = null;
         
         try {
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM " + table("categorie") );
+            conn = getConnection();
+            st = conn.createStatement();
+            rs = st.executeQuery("SELECT * FROM " + table("categorie") );
             
             while (rs.next()) {
                 // Gère pas encore la couleur a voir !!
@@ -555,11 +690,12 @@ public class BDD {
                 listCategorie.add(categorie);
 
             }
-            
-            rs.close();
-            st.close();
         } catch (SQLException ex) {
             Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try { rs.close(); } catch (Exception e) { /* ignored */ }
+            try { st.close(); } catch (Exception e) { /* ignored */ }
+            try { conn.close(); } catch (Exception e) { /* ignored */ }
         }
 
         return listCategorie;
@@ -572,20 +708,29 @@ public class BDD {
      */
     public Categorie CategorieByID(int CategorieID) {
         Categorie categorie = null;
+        Connection conn = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
         try {
             String SQL = "SELECT * "
                     + "FROM " + table("categorie")
                     + " WHERE categorie_id = ?";
 
-            PreparedStatement pstmt = conn.prepareStatement(SQL);
+            conn = getConnection();
+            pstmt = conn.prepareStatement(SQL);
             pstmt.setInt(1, CategorieID);
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
 
             while (rs.next()) {
                 categorie = new Categorie(rs.getInt(1),rs.getString("nom"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try { rs.close(); } catch (Exception e) { /* ignored */ }
+            try { pstmt.close(); } catch (Exception e) { /* ignored */ }
+            try { conn.close(); } catch (Exception e) { /* ignored */ }
         }
         return categorie;
     }
@@ -597,15 +742,20 @@ public class BDD {
      */
     public Categorie get_Categorie(String nom) {
         Categorie categorie = null;
+        Connection conn = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
         try {
             String SQL = "SELECT * "
                     + "FROM " + table("categorie")
                     + " WHERE nom = ? ";
 
-            PreparedStatement pstmt = conn.prepareStatement(SQL);
+            conn = getConnection();
+            pstmt = conn.prepareStatement(SQL);
 
             pstmt.setString(1, nom);
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
 
             while (rs.next()) {
                 categorie = new Categorie( rs.getInt(1),rs.getString("nom"));
@@ -613,6 +763,10 @@ public class BDD {
             }
         } catch (SQLException ex) {
             Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try { rs.close(); } catch (Exception e) { /* ignored */ }
+            try { pstmt.close(); } catch (Exception e) { /* ignored */ }
+            try { conn.close(); } catch (Exception e) { /* ignored */ }
         }
 
         return categorie;
@@ -628,23 +782,30 @@ public class BDD {
     public ArrayList<SousCategorie> get_Sous_categorie(int categorie_id) {
         
         ArrayList<SousCategorie> listSousCategorie = new ArrayList<>();
+        Connection conn = null;
+        ResultSet rs = null;
+        PreparedStatement st = null;
         
         try {
-            PreparedStatement st = conn.prepareStatement("SELECT * FROM " + table("sous_categorie") + " WHERE categorie_id = ?");
+            conn = getConnection();
+            st = conn.prepareStatement("SELECT * FROM " + table("sous_categorie") + " WHERE categorie_id = ?");
             st.setInt(1, categorie_id);
-            ResultSet rs = st.executeQuery();
-            
+            rs = st.executeQuery();
+
+            Categorie categorie = CategorieByID(categorie_id);
+
             while (rs.next())
             {
-                Categorie categorie = CategorieByID(rs.getInt( "categorie_id" ));
                 SousCategorie sousCat = new SousCategorie(rs.getInt(1),rs.getString("nom"),categorie,rs.getBoolean("is_global") );
                 listSousCategorie.add(sousCat);
             }
-            
-            rs.close();
-            st.close();
+
         } catch (SQLException ex) {
             Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try { rs.close(); } catch (Exception e) { /* ignored */ }
+            try { st.close(); } catch (Exception e) { /* ignored */ }
+            try { conn.close(); } catch (Exception e) { /* ignored */ }
         }
         
         return listSousCategorie;
@@ -691,7 +852,7 @@ public class BDD {
                     + "VALUES "
                     + "('" + nom +"'," + categorie_id + ");";
             
-            Statement st = conn.createStatement();
+            Statement st = getConnection().createStatement();
             st.executeUpdate(SQL);
             ok = true;
             
@@ -726,7 +887,7 @@ public class BDD {
                     + "VALUES "
                     + "('" + sousCategorie.nom +"'," + sousCategorie.categorie.id + ", false );";
 
-            Statement st = conn.createStatement();
+            Statement st = getConnection().createStatement();
 
             st.executeUpdate(SQL,Statement.RETURN_GENERATED_KEYS);
             // Récupère l'id de la nouvelle sous catégorie
@@ -751,15 +912,21 @@ public class BDD {
      * @return l'ID de la sous categorie
      */
     public int getSousCategorieID(String sousCategorie){
+
+        Connection conn = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
         try {
             String SQL = "SELECT * "
                     + "FROM " + table("sous_categorie")
                     + " WHERE nom = ? ";
 
-            PreparedStatement pstmt = conn.prepareStatement(SQL);
+            conn = getConnection();
+            pstmt = conn.prepareStatement(SQL);
 
             pstmt.setString(1, sousCategorie);
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
 
             while (rs.next()) {
                 return rs.getInt("sous_categorie_id");
@@ -767,6 +934,10 @@ public class BDD {
         } catch (SQLException ex) {
             Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
             return -1;
+        } finally {
+            try { rs.close(); } catch (Exception e) { /* ignored */ }
+            try { pstmt.close(); } catch (Exception e) { /* ignored */ }
+            try { conn.close(); } catch (Exception e) { /* ignored */ }
         }
         return 0;
     }
@@ -779,26 +950,36 @@ public class BDD {
     public ArrayList<String> get_Type_transaction() {
 
         ArrayList<String> listType_transaction = new ArrayList<>();
+        Connection conn = null;
+        ResultSet rs = null;
+        PreparedStatement st = null;
 
         try {
-            PreparedStatement st = conn.prepareStatement("SELECT * FROM " + table("type_transaction"));
-            ResultSet rs = st.executeQuery();
+            conn = getConnection();
+            st = conn.prepareStatement("SELECT * FROM " + table("type_transaction"));
+            rs = st.executeQuery();
 
             while (rs.next())
             {
                 listType_transaction.add( rs.getString("type") );
             }
 
-            rs.close();
-            st.close();
         } catch (SQLException ex) {
             Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try { rs.close(); } catch (Exception e) { /* ignored */ }
+            try { st.close(); } catch (Exception e) { /* ignored */ }
+            try { conn.close(); } catch (Exception e) { /* ignored */ }
         }
 
         return listType_transaction;
     }
 
     public ArrayList<Integer> getSousCategorieMonthly(int userID, int sousCatID) {
+        Connection conn = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
         String SQL = "SELECT SUM(Transaction.valeur) as Somme FROM " + table("utilisateur") +
                 "INNER JOIN " + table("Modele_transaction") + "ON Modele_transaction.utilisateur_id = Utilisateur.id " +
                 "INNER JOIN " + table("Transaction") + "ON Modele_transaction.modele_transaction_id = Transaction.modele_transaction_id " +
@@ -807,12 +988,13 @@ public class BDD {
         ArrayList<Integer> sommes = new ArrayList<>();
 
         try{
-            PreparedStatement pstmt = conn.prepareStatement(SQL);
+            conn = getConnection();
+            pstmt = conn.prepareStatement(SQL);
 
             pstmt.setInt(2, sousCatID);
             pstmt.setInt(1, userID);
 
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
 
 
             while (rs.next()) {
@@ -822,6 +1004,10 @@ public class BDD {
         }
         catch(SQLException ex){
             Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try { rs.close(); } catch (Exception e) { /* ignored */ }
+            try { pstmt.close(); } catch (Exception e) { /* ignored */ }
+            try { conn.close(); } catch (Exception e) { /* ignored */ }
         }
         return sommes;
     }
@@ -841,7 +1027,7 @@ public class BDD {
                         "VALUES (?, NOW(),?, ?, ?, ?, ?);";
 
         try{
-            PreparedStatement pstmt = conn.prepareStatement(SQL);
+            PreparedStatement pstmt = getConnection().prepareStatement(SQL);
 
             pstmt.setInt(1, valeur);
             pstmt.setString(2, note);
@@ -879,7 +1065,7 @@ public class BDD {
                 "VALUES (?, NOW(),?, ?, ?, ?, ?);";
 
         try{
-            PreparedStatement pstmt = conn.prepareStatement(SQL);
+            PreparedStatement pstmt = getConnection().prepareStatement(SQL);
 
             pstmt.setInt(1, valeur);
             pstmt.setString(2, note);
@@ -917,7 +1103,7 @@ public class BDD {
                 "VALUES ("+ valeur +", NOW(),?, ?, ?, ?, ?);";
 
         try {
-            PreparedStatement pstmt = conn.prepareStatement(SQL);
+            PreparedStatement pstmt = getConnection().prepareStatement(SQL);
 
             //pstmt.setBigDecimal(1, valeur);
             pstmt.setString(1, note);
@@ -979,12 +1165,16 @@ public class BDD {
 
     private int translateRecurrenceInDays(int idRecurrence)
     {
+        Connection conn = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
         String SQL = "Select periodicite FROM " + table("recurence") + " WHERE recurence_id = ?;";
         try
         {
-            PreparedStatement pstmt = conn.prepareStatement(SQL);
+            conn = getConnection();
+            pstmt = conn.prepareStatement(SQL);
             pstmt.setInt(1,idRecurrence);
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
 
             if(rs.next()) {
                 String val = rs.getString(1);
@@ -1019,36 +1209,41 @@ public class BDD {
         }
         catch(SQLException ex){
             Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try { rs.close(); } catch (Exception e) { /* ignored */ }
+            try { pstmt.close(); } catch (Exception e) { /* ignored */ }
+            try { conn.close(); } catch (Exception e) { /* ignored */ }
         }
         return 0;
     }
 
     public ArrayList<Categorie> getAllCategories() {
-        ArrayList<Categorie> categories = new ArrayList<Categorie>();
-        try {
-            String SQL = "SELECT categorie_id " + "FROM " + table("categorie");
 
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery(SQL);
+        ArrayList<Categorie> categories = new ArrayList<Categorie>();
+        Connection conn = null;
+        Statement st = null;
+        ResultSet rs = null;
+        try {
+            String SQL = "SELECT * " + "FROM " + table("categorie");
+            conn = this.getConnection();
+            st = conn.createStatement();
+            rs = st.executeQuery(SQL);
 
             while (rs.next()) {
-
-                categories.add(CategorieByID(rs.getInt("categorie_id")));
+                Categorie cat = new Categorie(rs.getInt("categorie_id"), rs.getString("nom"));
+                categories.add(cat);
 
             }
         } catch (SQLException ex) {
             Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try { rs.close(); } catch (Exception e) { /* ignored */ }
+            try { st.close(); } catch (Exception e) { /* ignored */ }
+            try { conn.close(); } catch (Exception e) { /* ignored */ }
         }
         return categories;
     }
 
-    /*public ArrayList<Integer> getTenLastSousCategorie(int userID, int sousCatID) {
-        String SQL = "SELECT SUM(Transaction.valeur) as Somme FROM " + table("Utilisateur") +
-                "INNER JOIN " + table("Modele_transaction") + "ON Modele_transaction.utilisateur_id = Utilisateur.id " +
-                "INNER JOIN " + table("Transaction") + "ON Modele_transaction.modele_transaction_id = Transaction.modele_transaction_id " +
-                "WHERE Utilisateur.id = ? AND Modele_transaction.sous_categorie_id = ? " + "GROUP BY MONTH(Transaction.date)";
-
-*/
     /**
      * Renvoie les 10 dernieres depenses toutes categories confondues
      *
@@ -1057,6 +1252,10 @@ public class BDD {
      * @return              retourne une liste contenant les 10 dernieres transactions de la sous categorie
      */
     public ArrayList<Integer> getTenLastSousCategorie(int userID, int sousCatID) {
+        Connection conn = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
         String SQL = "SELECT Transaction.valeur, Modele_transaction.type_transaction_id, Transaction.date FROM " + table("modele_transaction")
                         + " INNER JOIN " + table("Transaction") + " ON Modele_transaction.modele_transaction_id = Transaction.modele_transaction_id"
                         + " WHERE Modele_transaction.utilisateur_id = ? AND Modele_transaction.sous_categorie_id = ?"
@@ -1065,12 +1264,13 @@ public class BDD {
         ArrayList<Integer> sommes = new ArrayList<>();
 
         try{
-            PreparedStatement pstmt = conn.prepareStatement(SQL);
+            conn = getConnection();
+            pstmt = conn.prepareStatement(SQL);
 
             pstmt.setInt(1, userID);
             pstmt.setInt(2, sousCatID);
 
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
 
             while (rs.next()) {
                 sommes.add(rs.getInt(1));
@@ -1078,6 +1278,10 @@ public class BDD {
         }
         catch(SQLException ex){
             Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try { rs.close(); } catch (Exception e) { /* ignored */ }
+            try { pstmt.close(); } catch (Exception e) { /* ignored */ }
+            try { conn.close(); } catch (Exception e) { /* ignored */ }
         }
         return sommes;
     }
@@ -1086,12 +1290,16 @@ public class BDD {
     {
         String sql = "SELECT recurence_id FROM " + table("recurence") + " WHERE periodicite = ?;";
         int result = 0;
+        Connection conn = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
         try{
-            PreparedStatement pstmt = conn.prepareStatement(sql);
+            conn = getConnection();
+            pstmt = conn.prepareStatement(sql);
 
             pstmt.setString(1, recurrence);
 
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
 
             while (rs.next()) {
                 result = rs.getInt(1);
@@ -1099,20 +1307,28 @@ public class BDD {
         }
         catch(SQLException ex){
             Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try { rs.close(); } catch (Exception e) { /* ignored */ }
+            try { pstmt.close(); } catch (Exception e) { /* ignored */ }
+            try { conn.close(); } catch (Exception e) { /* ignored */ }
         }
         return result;
     }
 
     public double getSoldeById(int userId)
     {
+        Connection conn = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
         String sql = "SELECT solde FROM " + table("utilisateur") + " WHERE utilisateur_id = ?;";
         double result = 0;
         try{
-            PreparedStatement pstmt = conn.prepareStatement(sql);
+            conn = getConnection();
+            pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1, userId);
 
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
 
             while (rs.next()) {
                 result = rs.getDouble(1);
@@ -1120,6 +1336,10 @@ public class BDD {
         }
         catch(SQLException ex){
             Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try { rs.close(); } catch (Exception e) { /* ignored */ }
+            try { pstmt.close(); } catch (Exception e) { /* ignored */ }
+            try { conn.close(); } catch (Exception e) { /* ignored */ }
         }
         return result;
     }
@@ -1130,6 +1350,10 @@ public class BDD {
      * @return  retourne un tableau 2 dimensions avec 2 arrayList, la 1ere avec la categorie, la 2eme avec le montant
      */
     public ArrayList<Integer> DixDerniersMouvements(int userID){
+        Connection conn = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
         String SQL = "SELECT Transaction.valeur, Modele_transaction.type_transaction_id, Modele_transaction.sous_categorie_id, Transaction.date"
                         + " FROM Modele_transaction"
                         + " INNER JOIN Transaction ON Modele_transaction.modele_transaction_id = Transaction.modele_transaction_id"
@@ -1139,11 +1363,12 @@ public class BDD {
         ArrayList<Integer> sommes = new ArrayList<>();
 
         try{
-            PreparedStatement pstmt = conn.prepareStatement(SQL);
+            conn = getConnection();
+            pstmt = conn.prepareStatement(SQL);
 
             pstmt.setInt(1, userID);
 
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
 
             while (rs.next()) {
                 sommes.add(rs.getInt(1));
@@ -1151,6 +1376,10 @@ public class BDD {
         }
         catch(SQLException ex){
             Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try { rs.close(); } catch (Exception e) { /* ignored */ }
+            try { pstmt.close(); } catch (Exception e) { /* ignored */ }
+            try { conn.close(); } catch (Exception e) { /* ignored */ }
         }
         return sommes;
     }
@@ -1164,9 +1393,14 @@ public class BDD {
     {
         String sql = "SELECT * FROM " + table("recurence") + ";";
         ArrayList<Recurrence> recs = new ArrayList<>();
+        Connection conn = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
         try{
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            ResultSet rs = pstmt.executeQuery();
+            conn = getConnection();
+            pstmt = conn.prepareStatement(sql);
+            rs = pstmt.executeQuery();
 
             while (rs.next()) {
                 recs.add(new Recurrence(rs.getInt("recurence_id"),rs.getString("periodicite")));
@@ -1174,6 +1408,10 @@ public class BDD {
         }
         catch(SQLException ex){
             Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try { rs.close(); } catch (Exception e) { /* ignored */ }
+            try { pstmt.close(); } catch (Exception e) { /* ignored */ }
+            try { conn.close(); } catch (Exception e) { /* ignored */ }
         }
         return recs;
 
@@ -1183,7 +1421,7 @@ public class BDD {
         String SQL  = "CALL add_sous_cat_perso(?, ?)";
 
         try{
-            CallableStatement cs = conn.prepareCall(SQL);
+            CallableStatement cs = getConnection().prepareCall(SQL);
 
             //Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, "id user :" + id_user, "" );
 
@@ -1206,19 +1444,25 @@ public class BDD {
     public boolean belongToUser(int sousCat_id, int user_id) {
 
         boolean IsYours = false;
+        Connection conn = null;
+        ResultSet rs = null;
+        PreparedStatement st = null;
 
         try {
-            PreparedStatement st = conn.prepareStatement("SELECT * FROM " + table("sous_categories_personnelles") + " WHERE sous_categorie_id = ? AND utilisateur_id = ?");
+            conn = getConnection();
+            st = conn.prepareStatement("SELECT * FROM " + table("sous_categories_personnelles") + " WHERE sous_categorie_id = ? AND utilisateur_id = ?");
             st.setInt(1, sousCat_id);
             st.setInt(2, user_id);
-            ResultSet rs = st.executeQuery();
+            rs = st.executeQuery();
 
             IsYours = rs.next();
 
-            rs.close();
-            st.close();
         } catch (SQLException ex) {
             Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try { rs.close(); } catch (Exception e) { /* ignored */ }
+            try { st.close(); } catch (Exception e) { /* ignored */ }
+            try { conn.close(); } catch (Exception e) { /* ignored */ }
         }
 
         return IsYours;
@@ -1227,7 +1471,9 @@ public class BDD {
 
     public ArrayList<Transaction> getAllTransaction(int userId)
     {
-
+        Connection conn = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
         String SQL = "Select public.transaction.transaction_id, public.sous_categorie.nom, public.transaction.valeur," +
 
                 "public.transaction.date, public.modele_transaction.recurrence_id ,public.transaction.timestamp_solde," +
@@ -1240,11 +1486,12 @@ public class BDD {
         ArrayList<Transaction> trans = new ArrayList<>();
 
         try{
-            PreparedStatement pstmt = conn.prepareStatement(SQL);
+            conn = getConnection();
+            pstmt = conn.prepareStatement(SQL);
 
             pstmt.setInt(1, userId);
 
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
 
             while (rs.next()) {
 
@@ -1253,6 +1500,10 @@ public class BDD {
         }
         catch(SQLException ex){
             Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try { rs.close(); } catch (Exception e) { /* ignored */ }
+            try { pstmt.close(); } catch (Exception e) { /* ignored */ }
+            try { conn.close(); } catch (Exception e) { /* ignored */ }
         }
         return trans;
 
@@ -1261,7 +1512,9 @@ public class BDD {
 
     public ArrayList<Transaction> getAllTransactionByCatId(int userId,int cat)
     {
-
+        Connection conn = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
         String SQL = "Select public.transaction.transaction_id, public.sous_categorie.nom, public.transaction.valeur," +
 
                 "public.transaction.date, public.modele_transaction.recurrence_id,public.transaction.timestamp_solde, public.modele_transaction.type_transaction_id  FROM " + table("transaction") + " INNER JOIN " + table("modele_transaction")
@@ -1273,12 +1526,13 @@ public class BDD {
         ArrayList<Transaction> trans = new ArrayList<>();
 
         try{
-            PreparedStatement pstmt = conn.prepareStatement(SQL);
+            conn = getConnection();
+            pstmt = conn.prepareStatement(SQL);
 
             pstmt.setInt(1, userId);
             pstmt.setInt(2,cat);
 
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
 
             while (rs.next()) {
 
@@ -1287,6 +1541,10 @@ public class BDD {
         }
         catch(SQLException ex){
             Logger.getLogger(BDD.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try { rs.close(); } catch (Exception e) { /* ignored */ }
+            try { pstmt.close(); } catch (Exception e) { /* ignored */ }
+            try { conn.close(); } catch (Exception e) { /* ignored */ }
         }
         return trans;
 
