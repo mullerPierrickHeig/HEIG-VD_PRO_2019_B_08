@@ -1294,7 +1294,7 @@ public class BDD {
 
     public int addLimit(double amount,int userId,int recId,int sousCatId,int catId)
     {
-        String SQL = "INSERT INTO " + table("limite") + "(date, valeur, utilisateur_id, recurrence_id,sous_categorie_id,categorie_id) " +
+        String SQL = "INSERT INTO " + table("limite") + "(date, valeur, utilisateur_id, recurence_id,sous_categorie_id,categorie_id) " +
                 "VALUES ( NOW(),"+amount+", ?, ?, ?, ?);";
 
         try {
