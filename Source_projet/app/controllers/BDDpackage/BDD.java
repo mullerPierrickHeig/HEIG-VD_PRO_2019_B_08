@@ -26,7 +26,6 @@ import java.text.DateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 
-import com.mchange.v2.c3p0.ComboPooledDataSource;
 import javax.sql.DataSource;
 
 import play.db.*;
