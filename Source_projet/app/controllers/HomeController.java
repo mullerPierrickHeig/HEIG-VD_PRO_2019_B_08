@@ -46,7 +46,7 @@ public class HomeController extends Controller {
     public HomeController(FormFactory formFactory, Configuration configuration) {
         this.configuration = configuration;
         this.formFactory = formFactory;
-
+        // Récupère les config de la base de donnée
         String user = configuration.getString(DB_USERNAME);
         String passwd = configuration.getString(DB_PASSWORD);
         String url = configuration.getString(DB_URL);
