@@ -66,6 +66,10 @@ public class BDD {
         pool = new HikariDataSource(config);
     }*/
 
+    public String getUser(){
+        return user;
+    }
+
     public BDD(){
         this.Connection();
     }
