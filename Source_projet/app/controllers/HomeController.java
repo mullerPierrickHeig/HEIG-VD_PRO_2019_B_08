@@ -374,24 +374,29 @@ public class HomeController extends Controller {
     private Result ModelTrans(int id_trans){
         DynamicForm form = formFactory.form().bindFromRequest();
 
+
         double amount = Double.parseDouble(form.get("amount"));
         if (amount <= 0)
         {
             return redirect("/");
         }
-
-
-
-        int idSubCat = Integer.parseInt(form.get("sous-categorie"));
-
-        //return ok(views.html.index.render(Integer.toString(amount),user));
-        //return ok(views.html.index.render(Double.toString(amount),user));
+        int recId = Integer.parseInt(form.get("recurrence"));
 
         int userId = user.getId();
-        int recId = Integer.parseInt(form.get("recurrence"));
-        String note = form.get("note");
 
-        int result = DB.addMovement(userId,amount,idSubCat,recId,note,id_trans);
+        int result = 0;
+
+        if(id_trans != 1 && (form.get("remboursement") == null || form.get("remboursement").length() == 0))
+        {
+            result = DB.addMovement(userId,amount,100,recId,null,id_trans);
+        }
+        else
+        {
+            int idSubCat = Integer.parseInt(form.get("sous-categorie"));
+            String note = form.get("note");
+            result = DB.addMovement(userId,amount,idSubCat,recId,note,id_trans);
+        }
+
         user = DB.UtilisateurByID(userId);
         return redirect("/");
 
