@@ -46,6 +46,9 @@ public class BDD {
     private static String password = "123456789";
     private static String driver = "org.postgresql.Driver";
 
+    // Pour Gab
+    // private Connection conn = null;
+
     private static DataSource pool;
     private static HikariConfig config = new HikariConfig();
 
@@ -73,6 +76,16 @@ public class BDD {
         this.password = password;
 
         this.Connection();
+        /* Pour Gab
+        try {
+            conn = DriverManager.getConnection(url, user, password);
+            System.out.println("Connected to the PostgreSQL server successfully.");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        */
+
+
     }
 
     // Permet de mettre en place le pooling des connections à la base de donnée
@@ -132,6 +145,7 @@ public class BDD {
     }
 
     public static Connection getConnection(){
+        // Pour gab (commente tout sauf le retourne)
         Connection conn = null;
         try {
             conn = pool.getConnection();
@@ -473,7 +487,7 @@ public class BDD {
      * Permet de gérer l'enregistrement d'un utilisateur
      *
      * @params ...
-     * @throws
+     * @throws null
      */
     public int addUser(String prenom, String nom, String email, String pseudo, String mdp,
                        String genre, String anniversaire,int statut,int Pays,int Option,double solde){
