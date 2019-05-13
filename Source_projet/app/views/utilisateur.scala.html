@@ -25,6 +25,10 @@
         </div>
     }
 
+
+
+
+
     <div class="userPad">
         <div class="row justify-content-center">
             <div class="col-lg-5 col-sm-12">
@@ -72,6 +76,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <hr class="style1">
                         <div class="div-centered-panel">
                             <h6>Settings</h6>
@@ -106,6 +111,63 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+
+                        <hr class="style1">
+                        <div class="div-centered-panel">
+                            <div class="desc">
+                                <button type="button" class="btn btn-dark btn-sm" data-toggle="modal" data-target="#micro-tutorial">
+                                    Tutorial
+                                </button>
+                            </div>
+
+
+                            <div class="modal fade" id="micro-tutorial" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                            aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Tutorial</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <!------------------------------------------------------------------------>
+
+                                        <div id="carouselContent" class="carousel slide" >
+                                            <div class="carousel-inner" role="listbox">
+                                                <div class="carousel-item active text-center p-4" style="height: 80%;">
+                                                    <img src="@routes.Assets.versioned("images/TUTO_CTEGORIES-01.jpg")" class="d-block w-100" alt="img2">
+                                                    <div>1/3</div>
+                                                </div>
+                                                <div class="carousel-item text-center p-4">
+                                                    <img src="@routes.Assets.versioned("images/TUTO_profil.jpg")" class="d-block w-100" alt="img2">
+                                                    <div>2/3</div>
+                                                </div>
+                                                <div class="carousel-item text-center p-4">
+                                                    <img src="@routes.Assets.versioned("images/TUTO_add_things-01.jpg")" class="d-block w-100" alt="img2">
+                                                    <div>3/3</div>
+                                                </div>
+                                            </div>
+                                            <a class="carousel-control-prev" href="#carouselContent" role="button" data-slide="prev">
+                                                <span class="carousel-control-prev-icon" aria-hidden="false"></span>
+                                                <span class="sr-only">Previous</span>
+                                            </a>
+                                            <a class="carousel-control-next" href="#carouselContent" role="button" data-slide="next">
+                                                <span class="carousel-control-next-icon" aria-hidden="false"></span>
+                                                <span class="sr-only">Next</span>
+                                            </a>
+                                        </div>
+                                        <!------------------------------------------------------------------------>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <hr class="style1">
+                        <div class="div-centered-panel">
                             <div class="desc" style="margin-top: 20px;"><a href="/deco" class="button    ">Disconnect</a></div>
                         </div>
                     </div>

@@ -68,7 +68,7 @@ public class HomeController extends Controller {
 
     // Page d'accueil
     public Result Statistics()  throws SQLException {
-        return ok(views.html.Statistics.render("stats", user,4));
+        return ok(views.html.Statistics.render("stats", user,1));
     }
 
     // Gestion du login
@@ -381,22 +381,9 @@ public class HomeController extends Controller {
         }
 
 
-        //int idCat = Integer.parseInt(form.get("categorie"));
-        ArrayList<String> subsCat = new ArrayList<>(Arrays.asList(form.get("sous-categorie_1"),form.get("sous-categorie_2"),
-                form.get("sous-categorie_3"),form.get("sous-categorie_4"),form.get("sous-categorie_5"),
-                form.get("sous-categorie_6"),form.get("sous-categorie_7"),form.get("sous-categorie_8"),
-                form.get("sous-categorie_9"),form.get("sous-categorie_10"),form.get("sous-categorie_11"),
-                form.get("sous-categorie_12"),form.get("sous-categorie_13")));
 
-        HashSet<String> uniquesSubcat = new HashSet(subsCat);
-        int idSubCat = 0;
-        for(String uniq : uniquesSubcat)
-        {
-            if(Integer.parseInt(uniq) != 0)
-            {
-                idSubCat = Integer.parseInt(uniq);
-            }
-        }
+        int idSubCat = Integer.parseInt(form.get("sous-categorie"));
+
         //return ok(views.html.index.render(Integer.toString(amount),user));
         //return ok(views.html.index.render(Double.toString(amount),user));
 
@@ -456,5 +443,22 @@ public class HomeController extends Controller {
 
         // Retourne sur la page des Historiques
         return ok( views.html.utilisateur.render( user,alerte,message) );
+    }
+
+    public Result AddLimit()
+    {
+        DynamicForm form = formFactory.form().bindFromRequest();
+
+        double amount = Double.parseDouble(form.get("amount"));
+        if (amount <= 0)
+        {
+            return redirect("/");
+        }
+        int userId = user.getId();
+        int recId = Integer.parseInt(form.get("recurrence"));
+        int catId = Integer.parseInt(form.get("categorie"));
+
+        int result = DB.addLimit(amount,userId,recId,0,catId);
+        return redirect("/");
     }
 }
