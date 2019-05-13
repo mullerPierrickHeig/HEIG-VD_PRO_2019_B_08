@@ -21,4 +21,7 @@ libraryDependencies ++= Seq("com.novocode" % "junit-interface" % "0.10" % "test"
 libraryDependencies += "com.itextpdf" % "itextpdf" % "5.5.13"
 libraryDependencies += "com.itextpdf.tool" % "xmlworker" % "5.5.13"
 
+// libraryDependencies += "com.c3p0" % "c3p0" % "0.9.5.2"
+// libraryDependencies += "com.mchange-commons-java" % "mchange-commons-java" % "0.2.11"
+
 // "org.postgresql" % "postgresql" % "42.1.5"

@@ -16,6 +16,8 @@ import com.google.inject.Inject;
 import org.mindrot.jbcrypt.BCrypt;
 import java.util.*;
 import java.util.HashSet;
+import play.Configuration;
+
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -26,7 +28,14 @@ import java.util.ArrayList;
  */
 public class HomeController extends Controller {
 
-    static public BDD DB = new BDD();
+    public static BDD DB ;
+    private static final String DB_USERNAME="db.default.username";
+    private static final String DB_PASSWORD="db.default.password";
+    private static final String DB_URL ="db.default.url";
+
+
+    private final Configuration configuration;
+
     public Utilisateur user = new Utilisateur();
 
     private final FormFactory formFactory;
@@ -34,8 +43,15 @@ public class HomeController extends Controller {
 
 
     @Inject
-    public HomeController(FormFactory formFactory) {
+    public HomeController(FormFactory formFactory, Configuration configuration) {
+        this.configuration = configuration;
         this.formFactory = formFactory;
+        // Récupère les config de la base de donnée
+        String user = configuration.getString(DB_USERNAME);
+        String passwd = configuration.getString(DB_PASSWORD);
+        String url = configuration.getString(DB_URL);
+
+        DB = new BDD(url, user, passwd);
     }
 
     /**
